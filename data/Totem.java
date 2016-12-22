@@ -11,8 +11,34 @@ import java.util.TreeMap;
  */
 @XmlRootElement(name = "Totem")
 public class Totem {
+  private static final int STARTING_BLESSING_COUNT = 6;
   private List<Blessing> blessings;
   private Map<Attribute, Integer> totemBonus;
+
+
+  public Totem() {
+    blessings = new ArrayList<>();
+    totemBonus = new TreeMap<>();
+    for (Attribute attribute: Attribute.values()) {
+      totemBonus.put(attribute, 0);
+    }
+  }
+
+  public int getBaseFate() {
+    return STARTING_BLESSING_COUNT + blessings.size();
+  }
+
+  public void addBlessing(Blessing blessing) {
+    blessings.add(blessing);
+  }
+
+  public int getAttributeBonus(Attribute attribute) {
+    return totemBonus.get(attribute);
+  }
+
+  public void setAttributeBonus(Attribute attribute, int value) {
+    totemBonus.put(attribute, value);
+  }
 
   public List<Blessing> getBlessings() {
     return blessings;
@@ -30,23 +56,7 @@ public class Totem {
     this.totemBonus = totemBonus;
   }
 
-  public Totem() {
-    blessings = new ArrayList<>();
-    totemBonus = new TreeMap<>();
-    for (Attribute attribute: Attribute.values()) {
-      totemBonus.put(attribute, 0);
-    }
-  }
-
-  public int getBaseFate() {
-    return 5 + blessings.size();
-  }
-
-  public int getAttributeBonus(Attribute attribute) {
-    return totemBonus.get(attribute);
-  }
-
-  public void setAttributeBonus(Attribute attribute, int value) {
-    totemBonus.put(attribute, value);
+  public void deleteBlessing(Blessing blessing) {
+    blessings.remove(blessing);
   }
 }

@@ -9,14 +9,17 @@ import java.util.List;
  */
 @XmlRootElement(name = "Form")
 public class Form {
+  private String name, desc;
   private int formClass;
   private List<Feat> feats;
 
   public Form() {
-    this(3);
+    this("You", "Your normal everyday body", 3);
   }
 
-  public Form(int formClass, Feat... feats) {
+  public Form(String name, String desc, int formClass, Feat... feats) {
+    this.name = name;
+    this.desc = desc;
     this.formClass = formClass;
     this.feats = new ArrayList<Feat>();
     for (Feat f : feats) {
@@ -48,5 +51,21 @@ public class Form {
       }
     }
     return bonus;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  public String getDesc() {
+    return desc;
+  }
+
+  public void setDesc(String desc) {
+    this.desc = desc;
   }
 }
