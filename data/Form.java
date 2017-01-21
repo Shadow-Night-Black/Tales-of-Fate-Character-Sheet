@@ -14,10 +14,10 @@ public class Form {
   private List<Feat> feats;
 
   public Form() {
-    this("You", "Your normal everyday body", 3);
+    this("You", 3, "Your normal everyday body");
   }
 
-  public Form(String name, String desc, int formClass, Feat... feats) {
+  public Form(String name, int formClass, String desc, Feat... feats) {
     this.name = name;
     this.desc = desc;
     this.formClass = formClass;

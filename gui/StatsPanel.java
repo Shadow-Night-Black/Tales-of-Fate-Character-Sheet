@@ -6,8 +6,11 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.util.Pair;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -26,68 +29,193 @@ public class StatsPanel {
   private Label lblCurrentMC;
   private Label lblBaseFate;
   private Label lblCurrentFate;
-  private GridPane grid;
+  private GridPane gridHealth;
+  private GridPane gridPoints;
+  private List<Pair<Label, Label>> listSegments;
   private ToFCharacter toFCharacter;
+  private final Label lblBaseInit;
+  private final Label lblCurrentInit;
 
   public StatsPanel(MainFrame mainFrame, ToFCharacter character) {
     this.toFCharacter = character;
     this.mainFrame = mainFrame;
-    grid = MainFrame.getGridPane();
+    gridPoints = MainFrame.getGridPane();
+    gridHealth = MainFrame.getGridPane();
+
+    Label lblClass = new Label("Class");
+    Label lblBody = new Label("Body");
+    Label lblMind = new Label("Mind");
+    gridHealth.addColumn(0, lblClass, lblBody, lblMind);
+
+    listSegments = new ArrayList<>(7);
+
+    List<Integer> listBody = character.getBody();
+    List<Integer> listMind = character.getMind();
+    for (int i=0; i<=6; i++) {
+      Label body = new Label(String.valueOf(listBody.get(i)));
+      Label mind = new Label(String.valueOf(listMind.get(i)));
+      gridHealth.addColumn(7-i, new Label(String.valueOf(i)), body, mind);
+      listSegments.add(new Pair<>(body, mind));
+    }
+
 
     Label lblBase = new Label("Base:");
     Label lblCurrent = new Label("Current:");
 
-    grid.addColumn(0,new Label(),  lblBase, lblCurrent);
-    Label lblBody = new Label("Body");
-    lblBaseBody = new Label(String.valueOf(character.getBaseBody()));
-    lblCurrentBody = new Label(String.valueOf(character.getCurrentBody()));
-    grid.addColumn(1, lblBody, lblBaseBody, lblCurrentBody);
-
-    Label lblMind = new Label("Mind");
-    lblBaseMind = new Label(String.valueOf(character.getBaseMind()));
-    lblCurrentMind = new Label(String.valueOf(character.getCurrentMind()));
-    grid.addColumn(2, lblMind, lblBaseMind, lblCurrentMind);
+    gridPoints.addColumn(0,new Label(),  lblBase, lblCurrent);
 
     Label lblDC = new Label("DC");
     lblBaseDC = new Label(String.valueOf(character.getBaseDC()));
     lblCurrentDC = new Label(String.valueOf(character.getCurrentDC()));
-    grid.addColumn(3, lblDC, lblBaseDC, lblCurrentDC);
+    gridPoints.addColumn(1, lblDC, lblBaseDC, lblCurrentDC);
 
     Label lblMC = new Label("MC");
     lblBaseMC = new Label(String.valueOf(character.getBaseMC()));
     lblCurrentMC = new Label(String.valueOf(character.getCurrentMC()));
-    grid.addColumn(4, lblMC, lblBaseMC, lblCurrentMC);
+    gridPoints.addColumn(2, lblMC, lblBaseMC, lblCurrentMC);
 
+    Label lblInit = new Label("Initative");
+    lblBaseInit = new Label(String.valueOf(character.getBaseInit()));
+    lblCurrentInit = new Label(String.valueOf(character.getCurrentInit()));
+    gridPoints.addColumn(3, lblInit, lblBaseInit, lblCurrentInit);
 
     Label lblFate = new Label("Fate");
     lblBaseFate = new Label(String.valueOf(character.getBaseFate()));
     lblCurrentFate = new Label(String.valueOf(character.getCurrentFate()));
-    grid.addColumn(5, lblFate, lblBaseFate, lblCurrentFate);
+    gridPoints.addColumn(4, lblFate, lblBaseFate, lblCurrentFate);
 
-
+    Button btnHeal = new Button("Heal Damage");
     Button btnDamge = new Button("Take Damage");
-    Button btnHeal = new Button(("Heal Damage"));
-    btnDamge.setOnAction(actionEvent -> createPrompt(true));
-    btnHeal.setOnAction(actionEvent -> createPrompt(false));
-    grid.add(btnDamge, 6, 1);
-    grid.add(btnHeal, 6, 2);
+    btnHeal.setOnAction(actionEvent ->  {
+      Optional<Pair<Integer, Integer>> result = createDoublePrompt("Healing", "How much do you wish to heal?", "Body", "Mind", "Heal");
+      if (result.isPresent()) {
+        Pair<Integer, Integer> values = result.get();
+        toFCharacter.healPhysicalDamage(getBodyValue(values));
+        toFCharacter.healMentalDamage(getMindValue(values));
+        mainFrame.update(toFCharacter);
+
+      }
+    });
+    btnDamge.setOnAction(actionEvent -> {
+      Optional<Pair<Integer, Integer>> result = createDoublePrompt("Damage", "How much damage did you take?", "Body", "Mind", "Take Damage");
+      if (result.isPresent()) {
+        Pair<Integer, Integer> values = result.get();
+        toFCharacter.takePhysicalDamage(getBodyValue(values));
+        toFCharacter.takeMentalDamage(getMindValue(values));
+        mainFrame.update(toFCharacter);
+      }
+    });
+    gridPoints.add(btnHeal, 5, 1);
+    gridPoints.add(btnDamge, 5, 2);
+
+    Button btnInitSet = new Button("Set Initative");
+    Button btnInitUse = new Button("Use Initative");
+    btnInitSet.setOnAction(event -> {
+      Optional<Integer> result = createSinglePrompt("Set Initative", "What is your new Initiative?", "");
+      if (result.isPresent()) {
+        toFCharacter.setBaseInit(result.get());
+        mainFrame.update(toFCharacter);
+      }
+    });
+
+    btnInitUse.setOnAction(event -> {
+     Optional<Integer> result = createSinglePrompt("Use Initative", "How much Initative do you wish to use?", "");
+      if (result.isPresent()) {
+        Integer value = result.get();
+        if (value > toFCharacter.getCurrentInit()) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Too little Initative!");
+          alert.setContentText("You have too little Initative to use that much!");
+          alert.showAndWait();
+        }else {
+          toFCharacter.setCurrentInit(toFCharacter.getCurrentInit() - result.get());
+          mainFrame.update(toFCharacter);
+        }
+      }
+    });
+
+    gridPoints.add(btnInitSet, 6, 1);
+    gridPoints.add(btnInitUse, 6, 2);
+
+
+    Button btnFateGain = new Button("Recover Fate");
+    Button btnFateUse = new Button("Use Fate");
+    btnFateGain.setOnAction(event -> {
+      Optional<Integer> result = createSinglePrompt("Recover Current Fate", "How much Fate do you regain?", "");
+      if (result.isPresent()) {
+        toFCharacter.setCurrentFate(result.get() + toFCharacter.getCurrentFate());
+        mainFrame.update(toFCharacter);
+      }
+    });
+
+    btnFateUse.setOnAction(event -> {
+     Optional<Integer> result = createSinglePrompt("Use Fate", "How much Fate do you wish to use?", "");
+      if (result.isPresent()) {
+        Integer value = result.get();
+        if (value > toFCharacter.getCurrentFate()) {
+          Alert alert = new Alert(Alert.AlertType.ERROR);
+          alert.setTitle("Too little Fate!");
+          alert.setContentText("You have too little Fate to use that much!");
+          alert.showAndWait();
+        }else {
+          toFCharacter.setCurrentFate(toFCharacter.getCurrentFate() - result.get());
+          mainFrame.update(toFCharacter);
+        }
+      }
+    });
+    gridPoints.add(btnFateGain, 7, 1);
+    gridPoints.add(btnFateUse, 7,2);
+
+    Button btnMaxFateRecovery = new Button("Regain Max Fate");
+    Button btnMaxFateDamage = new Button("Lose Max Fate");
+    btnMaxFateRecovery.setOnAction(event -> {
+      Optional<Integer> result = createSinglePrompt("Recover Max Fate", "How much Max Fate do you regain?", "");
+      if (result.isPresent()) {
+        toFCharacter.setFateDamage(toFCharacter.getFateDamage() - result.get());
+        mainFrame.update(toFCharacter);
+      }
+    });
+    btnMaxFateDamage.setOnAction(event -> {
+      toFCharacter.setFateDamage(toFCharacter.getFateDamage()+1);
+      toFCharacter.setCurrentFate(toFCharacter.getCurrentFate() - 1);
+      mainFrame.update(toFCharacter);
+    });
+    gridPoints.add(btnMaxFateRecovery, 8, 1);
+    gridPoints.add(btnMaxFateDamage, 8,2);
+
 
   }
 
+  private Optional<Integer> createSinglePrompt(String title, String query, String label){
+    TextInputDialog dialog = new TextInputDialog(label);
+    dialog.setTitle(title);
+    dialog.setHeaderText(query);
+    dialog.setContentText(query);
 
-  private void createPrompt(boolean damage) {
-    Dialog<Pair<Integer, Integer>> healPrompt = new Dialog<>();
-    if (damage) {
-      healPrompt.setTitle("Damage");
-      healPrompt.setHeaderText("How much Damage did " + toFCharacter.getName() + " take?");
+    TextField field = dialog.getEditor();
+    field.textProperty().addListener((observable, oldValue, newValue) -> {
+      if (!newValue.matches("\\d*")) {
+        Platform.runLater(() -> {
+          field.setText(newValue.replaceAll("[^\\d*]", ""));
+          field.positionCaret(field.getLength());
+        });}});
+
+// Traditional way to get the response value.
+    Optional<String> result = dialog.showAndWait();
+    if (result.isPresent()){
+      return Optional.of(Integer.parseInt(result.get()));
     }else {
-      healPrompt.setTitle("Healing");
-      healPrompt.setHeaderText("How do you want to Heal " + toFCharacter.getName() + "?");
+      return Optional.empty();
     }
+  }
 
-    String btnText = damage?"Damage":"Heal";
-    ButtonType btnHeal = new ButtonType(btnText, ButtonBar.ButtonData.OK_DONE);
-    healPrompt.getDialogPane().getButtonTypes().addAll(btnHeal, ButtonType.CANCEL);
+  private Optional<Pair<Integer, Integer>> createDoublePrompt(String title, String query, String label1, String label2, String buttonLabel) {
+    Dialog<Pair<Integer, Integer>> prompt = new Dialog<>();
+    prompt.setTitle(title);
+    prompt.setHeaderText(query);
+
+    ButtonType btnConfirm = new ButtonType(buttonLabel, ButtonBar.ButtonData.OK_DONE);
+    prompt.getDialogPane().getButtonTypes().addAll(btnConfirm, ButtonType.CANCEL);
 
     GridPane grid = new GridPane();
     grid.setHgap(10);
@@ -95,13 +223,13 @@ public class StatsPanel {
     grid.setPadding(new Insets(20, 150, 10, 10));
 
     TextField txtHealingBody = new TextField();
-    txtHealingBody.setPromptText("Enter your change in Body");
+    txtHealingBody.setPromptText(label1);
     TextField txtHealingMind = new TextField();
-    txtHealingMind.setPromptText("Enter your change in Mind");
+    txtHealingMind.setPromptText(label2);
 
-    grid.add(new Label("Body:"), 0, 0);
+    grid.add(new Label(label1), 0, 0);
     grid.add(txtHealingBody, 1, 0);
-    grid.add(new Label("Mind:"), 0, 1);
+    grid.add(new Label(label2), 0, 1);
     grid.add(txtHealingMind, 1, 1);
 
     txtHealingBody.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -118,15 +246,15 @@ public class StatsPanel {
           txtHealingMind.positionCaret(txtHealingMind.getLength());
         });}});
 
-    healPrompt.getDialogPane().setContent(grid);
+    prompt.getDialogPane().setContent(grid);
     // Request focus on the username field by default.
     Platform.runLater(txtHealingBody::requestFocus);
 
 
 
 // Convert the result to a username-password-pair when the login button is clicked.
-    healPrompt.setResultConverter(dialogButton -> {
-      if (dialogButton == btnHeal) {
+    prompt.setResultConverter(dialogButton -> {
+      if (dialogButton == btnConfirm) {
         int healedBody, healedMind;
         try {
           healedBody = Integer.parseInt(txtHealingBody.getText());
@@ -144,33 +272,24 @@ public class StatsPanel {
       return null;
     });
 
-    Optional<Pair<Integer, Integer>> result = healPrompt.showAndWait();
-
-    result.ifPresent(healing -> {
-      if (damage) {
-        toFCharacter.setCurrentBody(toFCharacter.getCurrentBody() - healing.getKey());
-        toFCharacter.setCurrentMind(toFCharacter.getCurrentMind() - healing.getValue());
-      }else {
-        toFCharacter.setCurrentBody(toFCharacter.getCurrentBody() + healing.getKey());
-        toFCharacter.setCurrentMind(toFCharacter.getCurrentMind() + healing.getValue());
-      }
-      mainFrame.update(toFCharacter);
-    });
+    return prompt.showAndWait();
   }
 
 
   public Pane getPanel() {
-    return grid;
+    return new VBox(gridHealth, gridPoints);
   }
 
   public void update(ToFCharacter character) {
     this.toFCharacter = character;
 
-    lblBaseBody.setText(String.valueOf(character.getBaseBody()));
-    lblCurrentBody.setText(String.valueOf(character.getCurrentBody()));
-
-    lblBaseMind.setText(String.valueOf(character.getBaseMind()));
-    lblCurrentMind.setText(String.valueOf(character.getCurrentMind()));
+    List<Integer> listBody = character.getBody();
+    List<Integer> listMind = character.getMind();
+    for (int i=6; i>=0; i--) {
+      Pair<Label, Label> segment = listSegments.get(i);
+      getBodyValue(segment).setText(String.valueOf(listBody.get(i)));
+      getMindValue(segment).setText(String.valueOf(listMind.get(i)));
+    }
 
     lblBaseDC.setText(String.valueOf(character.getBaseDC()));
     lblCurrentDC.setText(String.valueOf(character.getCurrentDC()));
@@ -178,10 +297,19 @@ public class StatsPanel {
     lblBaseMC.setText(String.valueOf(character.getBaseMC()));
     lblCurrentMC.setText(String.valueOf(character.getCurrentMC()));
 
+    lblBaseInit.setText(String.valueOf(character.getBaseInit()));
+    lblCurrentInit.setText(String.valueOf(character.getCurrentInit()));
 
     lblBaseFate.setText(String.valueOf(character.getBaseFate()));
     lblCurrentFate.setText(String.valueOf(character.getCurrentFate()));
 
   }
 
+  private <T extends Pair<V, V>, V> V getBodyValue(T pair) {
+    return pair.getKey();
+  }
+
+  private <T extends Pair<V, V>, V> V getMindValue(T pair) {
+    return pair.getValue();
+  }
 }

@@ -5,6 +5,7 @@ import data.Blessing;
 import data.ToFCharacter;
 import data.Totem;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -12,16 +13,15 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.util.Callback;
 
 import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * Created by shado on 10/12/2016.
- */
 public class BlessingsPanel {
 
 
@@ -39,7 +39,7 @@ public class BlessingsPanel {
     GridPane totemGrid = MainFrame.getGridPane();
 
     Label lblTotem = new Label("Totem Bonuses");
-    grid.add(lblTotem, 0, 0, 2, 1);
+    totemGrid.add(lblTotem, 0, 0, 2, 1);
 
     Totem totem = character.getTotem();
     for (Attribute a : Attribute.values()) {
@@ -76,38 +76,51 @@ public class BlessingsPanel {
     Label lblBlessings = new Label("Blessings");
 
     tblBlessings = new TableView();
-    tblBlessings.setEditable(true);
-
-
 
     TableColumn<BlessingModel, String> name = new TableColumn("Name");
     TableColumn<BlessingModel, String> god = new TableColumn("God");
-    TableColumn<BlessingModel, String> cost = new TableColumn("Cost");
+    TableColumn<BlessingModel, Integer> cost = new TableColumn("Cost");
     TableColumn<BlessingModel, String> desc = new TableColumn("Description");
     tblBlessings.getColumns().addAll(name, god, cost, desc);
 
-    name.setPrefWidth(100);
+
+    name.prefWidthProperty().bind(tblBlessings.widthProperty().divide(6));
     name.setCellValueFactory(new PropertyValueFactory<>("name"));
+    name.setMinWidth(100);
 
-    god.setPrefWidth(150);
+
+    god.prefWidthProperty().bind(tblBlessings.widthProperty().multiply(3).divide(12));
     god.setCellValueFactory(cellData -> cellData.getValue().godProperty());
+    god.setMinWidth(150);
 
-    cost.setPrefWidth(50);
+    cost.prefWidthProperty().bind(tblBlessings.widthProperty().divide(12));
     cost.setCellValueFactory(new PropertyValueFactory<>("cost"));
+    cost.setMinWidth(50);
 
-    desc.setPrefWidth(300);
+    desc.prefWidthProperty().bind(tblBlessings.widthProperty().divide(2));
+    desc.setMinWidth(300);
     desc.setCellValueFactory(new PropertyValueFactory<>("desc"));
-
+    desc.setCellFactory(param -> {
+      TableCell<BlessingModel, String> cell = new TableCell<>();
+      Text text = new Text();
+      cell.setGraphic(text);
+      cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
+      text.wrappingWidthProperty().bind(desc.widthProperty());
+      text.textProperty().bind(cell.itemProperty());
+      return cell ;
+    });
 
 
     HBox addBlessing = new HBox();
 
     TextField txtAddName = new TextField();
     txtAddName.setPromptText("Name");
-    txtAddName.setPrefWidth(name.getPrefWidth());
+    txtAddName.prefWidthProperty().bind(name.widthProperty());
+    txtAddName.minWidthProperty().bind(name.minWidthProperty());
 
-    ComboBox<Attribute> comboAddGod = new ComboBox<Attribute>();
-    comboAddGod.setPrefWidth(god.getPrefWidth());
+    ComboBox<Attribute> comboAddGod = new ComboBox<>();
+    comboAddGod.prefWidthProperty().bind(god.widthProperty());
+    comboAddGod.minWidthProperty().bind(god.minWidthProperty());
     comboAddGod.setCellFactory(
             new Callback<ListView<Attribute>, ListCell<Attribute>>() {
               public ListCell<Attribute > call(ListView<Attribute> p) {
@@ -143,7 +156,8 @@ public class BlessingsPanel {
 
     TextField txtAddCost = new TextField();
     txtAddCost.setPromptText("Cost");
-    txtAddCost.setPrefWidth(cost.getPrefWidth());
+    txtAddCost.prefWidthProperty().bind(cost.widthProperty());
+    txtAddCost.minWidthProperty().bind(cost.minWidthProperty());
     txtAddCost.textProperty().addListener((observable, oldValue, newValue) -> {
           if (!newValue.matches("\\d*")) {
             Platform.runLater(() -> {
@@ -153,8 +167,8 @@ public class BlessingsPanel {
 
     TextField txtAddDesc = new TextField();
     txtAddDesc.setPromptText("Blessing's Desc");
-    txtAddDesc.setPrefWidth(desc.getPrefWidth());
-
+    txtAddDesc.prefWidthProperty().bind(desc.widthProperty());
+    txtAddDesc.minWidthProperty().bind(desc.minWidthProperty());
 
 
     for (Blessing blessing: character.getTotem().getBlessings()) {
@@ -168,35 +182,46 @@ public class BlessingsPanel {
 
     Button btnAddBless = new Button("Add");
     btnAddBless.setOnAction(actionEvent -> {
-      character.getTotem().addBlessing(new Blessing(
-              txtAddName.getText(), comboAddGod.getValue(), Integer.parseInt(txtAddCost.getText()), txtAddDesc.getText()));
-      mainFrame.update(character);
+      try {
+        character.getTotem().addBlessing(new Blessing(
+                txtAddName.getText(),
+                comboAddGod.getValue(),
+                Integer.parseInt(txtAddCost.getText()),
+                txtAddDesc.getText()));
+        mainFrame.update(character);
+      }catch (NumberFormatException e) {};
     });
 
     Button btnEditBless = new Button("Edit");
     btnEditBless.setOnAction(actionEvent -> {
       BlessingModel model = tblBlessings.getSelectionModel().getSelectedItem();
-      model.setName(txtAddName.getText());
-      model.setGod(String.valueOf(comboAddGod.getSelectionModel().getSelectedItem()));
-      model.setCost(txtAddCost.getText());
-      model.setDesc(txtAddDesc.getText());
-      update(character);
+      if (model != null) {
+        model.setName(txtAddName.getText());
+        model.setGod(String.valueOf(comboAddGod.getSelectionModel().getSelectedItem()));
+        model.setCost(Integer.parseInt(txtAddCost.getText()));
+        model.setDesc(txtAddDesc.getText());
+        update(character);
+      }
     });
 
     Button btnRemoveBless = new Button("Delete");
 
     btnRemoveBless.setOnAction(actionEvent -> {
       BlessingModel model = tblBlessings.getSelectionModel().getSelectedItem();
+      if (model != null) {
       Blessing blessing = model.getBlessing();
       character.getTotem().deleteBlessing(blessing);
       update(character);
+      }
     });
 
     tblBlessings.getSelectionModel().selectedItemProperty().addListener((observableValue, t1, blessingModel) -> {
-      txtAddName.setText(blessingModel.getName());
-      comboAddGod.getSelectionModel().select(blessingModel.getBlessing().getGod());
-      txtAddCost.setText(blessingModel.getCost());
-      txtAddDesc.setText(blessingModel.getDesc());
+      if (blessingModel != null) {
+        txtAddName.setText(blessingModel.getName());
+        comboAddGod.getSelectionModel().select(blessingModel.getBlessing().getGod());
+        txtAddCost.setText(String.valueOf(blessingModel.getCost()));
+        txtAddDesc.setText(blessingModel.getDesc());
+      }
     });
 
     controls.getChildren().addAll(btnAddBless, btnEditBless, btnRemoveBless);
@@ -204,7 +229,8 @@ public class BlessingsPanel {
 
     cntBlessings.getChildren().addAll(lblBlessings, tblBlessings, addBlessing, controls);
 
-    grid.addRow(1, totemBox, cntBlessings);
+    grid.setHgrow(cntBlessings, Priority.ALWAYS);
+    grid.addRow(0, totemBox, cntBlessings);
 
   }
 
@@ -215,8 +241,9 @@ public class BlessingsPanel {
       totemMods.get(attribute).setText(fmt.format(bonus));
     }
 
+
     tblBlessings.getItems().clear();
-    for (Blessing blessing: character.getTotem().getBlessings()) {
+    for (Blessing blessing: totem.getBlessings()) {
       BlessingModel model = new BlessingModel(blessing);
       tblBlessings.getItems().add(model);
     }
@@ -230,24 +257,24 @@ public class BlessingsPanel {
   public class BlessingModel {
     private Blessing blessing;
     private SimpleStringProperty name, god, desc;
-    private SimpleStringProperty cost;
+    private SimpleIntegerProperty cost;
 
     public BlessingModel(Blessing blessing) {
       this.init(new SimpleStringProperty(blessing.getName()),
               new SimpleStringProperty(String.valueOf(blessing.getGod().getGod())),
               new SimpleStringProperty(blessing.getDescription()),
-              new SimpleStringProperty(String.valueOf(blessing.getLevel())),
+              new SimpleIntegerProperty(blessing.getLevel()),
               blessing);
     }
 
-    public BlessingModel(SimpleStringProperty name, SimpleStringProperty god, SimpleStringProperty desc, SimpleStringProperty cost) {
-      int intCost = Integer.parseInt(cost.getValue());
+    public BlessingModel(SimpleStringProperty name, SimpleStringProperty god, SimpleStringProperty desc, SimpleIntegerProperty cost) {
+      int intCost = cost.getValue();
       Attribute attribute = Attribute.valueOf(god.getValue());
       Blessing blessing = new Blessing(name.getValue(), attribute, intCost, desc.getValue());
       this.init(name, god, desc, cost, blessing);
     }
 
-    private void init(SimpleStringProperty name, SimpleStringProperty god, SimpleStringProperty desc, SimpleStringProperty cost, Blessing blessing) {
+    private void init(SimpleStringProperty name, SimpleStringProperty god, SimpleStringProperty desc, SimpleIntegerProperty cost, Blessing blessing) {
       this.name = name;
       this.god = god;
       this.desc = desc;
@@ -300,17 +327,17 @@ public class BlessingsPanel {
       this.blessing.setDescription(desc);
     }
 
-    public String getCost() {
+    public Integer getCost() {
       return cost.get();
     }
 
-    public SimpleStringProperty costProperty() {
+    public SimpleIntegerProperty costProperty() {
       return cost;
     }
 
-    public void setCost(String cost) {
+    public void setCost(Integer cost) {
       this.cost.set(cost);
-      this.blessing.setLevel(Integer.parseInt(cost));
+      this.blessing.setLevel(cost);
     }
   }
 

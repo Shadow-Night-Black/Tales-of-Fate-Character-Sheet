@@ -23,7 +23,9 @@ public class ToFCharacter {
   private List<Figment> figments;
   private Totem totem;
   private String name, bio;
-  private int currentBody, currentMind, fateDamage, currentFate;
+  private int fateDamage, currentFate;
+  private List<Integer> body, mind;
+  private int baseInit, currentInit;
 
   public ToFCharacter(String name, String bio) {
     this.name = name;
@@ -37,12 +39,21 @@ public class ToFCharacter {
     abilities = new ArrayList<>();
     figments = new ArrayList<>();
     this.currentForm = new Form();
+    forms.add(currentForm);
     this.totem = new Totem();
 
-    this.currentBody = getBaseBody();
-    this.currentMind = getBaseMind();
+    this.body = new ArrayList<>(7);
+    this.mind = new ArrayList<>(7);
+    int bodySegment = getBaseBody() / getCurrentForm().getFormClass();
+    int mindSegment = getBaseMind() / getCurrentForm().getFormClass();
+    for (int i = 0; i < 7; i++) {
+      body.add(bodySegment);
+      mind.add(mindSegment);
+    }
+
     this.fateDamage = 0;
     this.currentFate = this.getBaseFate();
+    this.currentInit = 0;
   }
 
   public ToFCharacter() {
@@ -54,6 +65,17 @@ public class ToFCharacter {
   }
 
   public void setAttribute(Attribute attribute, int value) {
+    System.out.println("Changing " + attribute + " from " + this.attributes.get(attribute) + " to " + value);
+    int difference = value - this.attributes.get(attribute);
+      List<Integer> segments;
+      if (attribute.isPhysical()) {
+        segments = body;
+      }else {
+        segments = mind;
+      }
+      for(int i = 0; i <= 6; i++) {
+        segments.set(i, Math.max(segments.get(i) + difference, 0));
+      }
     this.attributes.put(attribute, value);
   }
 
@@ -169,26 +191,73 @@ public class ToFCharacter {
     return totalMind;
   }
 
-  public int getCurrentBody() {
-    return currentBody;
+  public void takePhysicalDamage(int damage) {
+    int currentSegment = currentForm.getFormClass();
+    do {
+      if (body.get(currentSegment) < damage) {
+        damage -= body.get(currentSegment);
+        body.set(currentSegment, 0);
+        currentSegment--;
+      }else {
+        body.set(currentSegment, body.get(currentSegment) - damage);
+        damage = 0;
+      }
+
+    }while (damage > 0 && currentSegment >= 0);
   }
 
-  public void setCurrentBody(int currentBody) {
-    if (currentBody < this.getBaseBody())
-      this.currentBody = currentBody;
-    else
-      this.currentBody = this.getBaseBody();
+  public void takeMentalDamage(int damage) {
+    int currentSegment = currentForm.getFormClass();
+    do {
+      if (mind.get(currentSegment) < damage) {
+        damage -= mind.get(currentSegment);
+        mind.set(currentSegment, 0);
+        currentSegment--;
+      }else {
+        mind.set(currentSegment, mind.get(currentSegment) - damage);
+        damage = 0;
+      }
+    }while (damage > 0 && currentSegment >= 0);
   }
 
-  public int getCurrentMind() {
-    return currentMind;
+  public void healPhysicalDamage(int healing) {
+    int currentSegment = 0;
+    int segmentMax = getBaseBody() / currentForm.getFormClass();
+    do {
+      if (body.get(currentSegment) < segmentMax) {
+        int amountToHeal  = segmentMax - body.get(currentSegment);
+        if (amountToHeal < healing) {
+          healing = healing - amountToHeal;
+          body.set(currentSegment, segmentMax);
+          currentSegment++;
+        }else {
+          body.set(currentSegment, healing + body.get(currentSegment));
+          healing = 0;
+        }
+      } else{
+        currentSegment++;
+      }
+    }while(healing > 0 && currentSegment <= 6);
   }
 
-  public void setCurrentMind(int currentMind) {
-    if (currentMind < this.getBaseMind())
-      this.currentMind = currentMind;
-    else
-      this.currentMind = this.getBaseMind();
+  public void healMentalDamage(int healing) {
+    int currentSegment = 0;
+    int segmentMax = getBaseMind() / currentForm.getFormClass();
+    do {
+      if (mind.get(currentSegment) < segmentMax) {
+        int amountToHeal  = segmentMax - mind.get(currentSegment);
+        if (amountToHeal < healing) {
+          healing = healing - amountToHeal;
+          mind.set(currentSegment, segmentMax);
+          currentSegment++;
+        }else {
+          mind.set(currentSegment, healing + mind.get(currentSegment));
+          healing = 0;
+        }
+      } else{
+        currentSegment++;
+      }
+    }while(healing > 0 && currentSegment <= 6);
   }
 
   public int getBaseDC() {
@@ -240,7 +309,7 @@ public class ToFCharacter {
   }
 
   public void setFateDamage(int fateDamage) {
-    this.fateDamage = fateDamage;
+    this.fateDamage = Math.max(fateDamage, 0);
   }
 
   public int getCurrentFate() {
@@ -248,7 +317,10 @@ public class ToFCharacter {
   }
 
   public void setCurrentFate(int currentFate) {
-    this.currentFate = currentFate;
+    if (currentFate < this.getBaseFate())
+      this.currentFate = currentFate;
+    else
+      this.currentFate = this.getBaseFate();
   }
 
   public Form getCurrentForm() {
@@ -257,5 +329,50 @@ public class ToFCharacter {
 
   public void setCurrentForm(Form currentForm) {
     this.currentForm = currentForm;
+  }
+
+  public void addForm(Form form) {
+    this.forms.add(form);
+  }
+
+  public void removeForm(Form form) {
+    this.forms.remove(form);
+  }
+
+  public List<Integer> getBody() {
+    return body;
+  }
+
+  public void setBody(List<Integer> body) {
+    this.body = body;
+  }
+
+  public List<Integer> getMind() {
+    return mind;
+  }
+
+  public void setMind(List<Integer> mind) {
+    this.mind = mind;
+  }
+
+  public int getBaseInit() {
+    return baseInit;
+  }
+
+  public void setBaseInit(int baseInit) {
+    this.baseInit = baseInit;
+    this.currentInit = baseInit;
+  }
+
+  public int getCurrentInit() {
+    return currentInit;
+  }
+
+  public void setCurrentInit(int currentInit) {
+    if (currentInit < baseInit) {
+      this.currentInit = currentInit;
+    }else {
+      this.currentInit = baseInit;
+    }
   }
 }

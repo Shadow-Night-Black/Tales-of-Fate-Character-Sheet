@@ -1,6 +1,7 @@
 package gui;
 
 import data.ToFCharacter;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -31,8 +32,8 @@ public class NotesPanel {
       character.setBio(newValue);
       mainFrame.update(character);
     });
-
-    grid.addColumn(0, txtName, txtBio);
+    grid.addColumn(0, new Label("Character's Name:"), new Label("Character's Bio:"));
+    grid.addColumn(1, txtName, txtBio);
   }
 
   public void update(ToFCharacter character) {

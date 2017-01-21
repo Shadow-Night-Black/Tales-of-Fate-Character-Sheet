@@ -27,6 +27,7 @@ public class MainFrame extends Application {
   private StatsPanel statsPanel;
   private static FileChooser fileChooser;
   private static File lastUsed;
+  private FormsPanel formsPanel;
 
   public MainFrame() {
     this(new ToFCharacter());
@@ -54,9 +55,10 @@ public class MainFrame extends Application {
     attributePanel = new AttributePanel(this, character);
     Tab attributes = new Tab("Attributes", attributePanel.getPanel());
 
-    Tab forms = new Tab("Forms", createFormsPane());
+    formsPanel = new FormsPanel(this, character);
+    Tab forms = new Tab("Forms", formsPanel.getPanel());
 
-    Tab feats = new Tab("Feats/Abilites", createFeatsPane());
+    Tab feats = new Tab("Feats/Abilites", createFormsPane());
 
     Tab figments = new Tab("Figments", createFigmentPane());
 
@@ -77,10 +79,6 @@ public class MainFrame extends Application {
     return null;
   }
 
-  private Pane createFeatsPane() {
-    return null;
-  }
-
   private Pane createFormsPane() {
     return null;
   }
@@ -91,6 +89,7 @@ public class MainFrame extends Application {
     stage.setTitle(character.getName() + " - ToFCharacter Sheet");
     attributePanel.update(character);
 
+    formsPanel.update(character);
     blessingsPanel.update(character);
     notesPanel.update(character);
 
@@ -170,6 +169,7 @@ public class MainFrame extends Application {
     grid.setAlignment(Pos.CENTER);
     grid.setHgap(10);
     grid.setVgap(10);
+    //grid.setGridLinesVisible(true);
     grid.setPadding(new Insets(25, 25, 25, 25));
     return grid;
   }

@@ -5,16 +5,18 @@ import data.ToFCharacter;
 import javafx.application.Platform;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class AttributePanel {
   private final MainFrame mainFrame;
-  private Map<Attribute, TextField> baseValues;
+  private Map<Attribute, NumberSpinner> baseValues;
   private Map<Attribute, Label> baseMods;
   private Map<Attribute, Label> modifiedValues;
   private Map<Attribute, Label> modifiedMods;
@@ -30,26 +32,16 @@ public class AttributePanel {
     fmt = new DecimalFormat("+#0;-#");
 
     for(Attribute attribute: Attribute.values()) {
-      TextField txt = new TextField();
-      txt.setPrefColumnCount(2);
+      NumberSpinner txt = new NumberSpinner();
+      //txt.setPrefColumnCount(2); //Now in NumberTextField
       int baseValue = character.getBaseAttribute(attribute);
-      txt.setText(String.valueOf(baseValue));
+      txt.setNumber(new BigDecimal(baseValue));
 
-      txt.textProperty().addListener((observable, oldValue, newValue) -> {
-          if (!newValue.matches("\\d*")) {
-            Platform.runLater(() -> {
-              txt.setText(newValue.replaceAll("[^\\d*]", ""));
-              txt.positionCaret(txt.getLength());
-            });
-          } else {
-            try {
-              int value = Integer.parseInt(newValue);
-              character.setAttribute(attribute, value);
-              mainFrame.update(character);
-            } catch (NumberFormatException e) {
-            }
-          }
-        });
+      txt.numberProperty().addListener((observable, oldValue, newValue) -> {
+        character.setAttribute(attribute, newValue.intValue());
+        mainFrame.update(character);
+      });
+
       baseValues.put(attribute, txt);
 
       int mod = Attribute.getModifier(baseValue);
@@ -72,13 +64,16 @@ public class AttributePanel {
     for (Attribute attribute: Attribute.values()) {
       pane.addRow(attribute.index(), new Label(attribute.getAbbrevation()), baseValues.get(attribute), baseMods.get(attribute), modifiedValues.get(attribute), modifiedMods.get(attribute));
     }
+    ColumnConstraints attributeBoxs = new ColumnConstraints(60);
+    pane.getColumnConstraints().addAll(new ColumnConstraints(), attributeBoxs);
+
   }
 
   public void update(ToFCharacter character) {
     for (Attribute attribute: Attribute.values()) {
       int value = character.getBaseAttribute(attribute);
       int moddedValue = character.getModifiedAttribute(attribute);
-      baseValues.get(attribute).setText(String.valueOf(value));
+      baseValues.get(attribute).setNumber(new BigDecimal(value));
       baseMods.get(attribute).setText(fmt.format(Attribute.getModifier(value)));
       modifiedValues.get(attribute).setText(String.valueOf(moddedValue));
       baseMods.get(attribute).setText(fmt.format(Attribute.getModifier(moddedValue)));
@@ -88,9 +83,8 @@ public class AttributePanel {
   public Pane getPanel() {
     return pane;
   }
-
-
   /**
+   //now generates pane in the constructor
    GridPane grid = getGridPane();
 
    int y = 1;

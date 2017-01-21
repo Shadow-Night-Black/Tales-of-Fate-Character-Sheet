@@ -23,20 +23,81 @@
         </entry>
         <entry>
             <key>PRESENCE</key>
-            <value>7</value>
+            <value>8</value>
         </entry>
     </attributes>
+    <baseInit>6</baseInit>
     <bio>Testing
 </bio>
-    <currentBody>66</currentBody>
+    <body>22</body>
+    <body>22</body>
+    <body>22</body>
+    <body>22</body>
+    <body>22</body>
+    <body>22</body>
+    <body>22</body>
     <currentFate>5</currentFate>
     <currentForm>
+        <desc>An incorpeal form, perfect for scouting</desc>
         <formClass>3</formClass>
+        <name>Shadow</name>
     </currentForm>
-    <currentMind>78</currentMind>
+    <currentInit>6</currentInit>
     <fateDamage>0</fateDamage>
+    <forms>
+        <desc>Your normal everyday body</desc>
+        <formClass>3</formClass>
+        <name>You</name>
+    </forms>
+    <forms>
+        <desc>An incorpeal form, perfect for scouting</desc>
+        <formClass>3</formClass>
+        <name>Shadow</name>
+    </forms>
+    <forms>
+        <desc>Small, light and nimble</desc>
+        <formClass>2</formClass>
+        <name>Cat</name>
+    </forms>
+    <mind>27</mind>
+    <mind>27</mind>
+    <mind>27</mind>
+    <mind>27</mind>
+    <mind>27</mind>
+    <mind>27</mind>
+    <mind>27</mind>
     <name>Leaf</name>
     <totem>
+        <blessings>
+            <description>Add 1d6 to a RES Roll</description>
+            <god>RESISENCE</god>
+            <level>1</level>
+            <name>Harden</name>
+        </blessings>
+        <blessings>
+            <description>Add 2 to an adjcent Ally's RES total</description>
+            <god>RESISENCE</god>
+            <level>1</level>
+            <name>Guard</name>
+        </blessings>
+        <blessings>
+            <description>Increase your or one adjacent target’s Body by 1d6 + your RES total/2</description>
+            <god>RESISENCE</god>
+            <level>2</level>
+            <name>Repair</name>
+        </blessings>
+        <blessings>
+            <description>Elect to be the target of an attack made against one another target. Reduce theresulting damage by your Resilience total/2.</description>
+            <god>RESISENCE</god>
+            <level>2</level>
+            <name>Sentry</name>
+        </blessings>
+        <blessings>
+            <description>You and all allies increase your resistance to one physical damage type for theencounter.</description>
+            <god>RESISENCE</god>
+            <level>3</level>
+            <name>Resist</name>
+        </blessings>
         <totemBonus>
             <entry>
                 <key>POWER</key>
