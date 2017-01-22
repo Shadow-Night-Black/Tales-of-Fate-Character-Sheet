@@ -4,18 +4,13 @@ import data.Form;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-/**
- * Created by shado on 22/01/2017.
- */
 public class FormModel {
   private Form form;
   private SimpleIntegerProperty formClass;
   private SimpleStringProperty name, desc;
 
   public FormModel(Form form) {
-    init(form, new SimpleIntegerProperty(form.getFormClass()),
-      new SimpleStringProperty(form.getName()),
-      new SimpleStringProperty(form.getDesc()));
+    setForm(form);
   }
 
   public FormModel(SimpleIntegerProperty formClass, SimpleStringProperty name, SimpleStringProperty desc) {
@@ -23,7 +18,7 @@ public class FormModel {
     init(form, formClass, name, desc);
   }
 
-  public void init(Form form, SimpleIntegerProperty formClass, SimpleStringProperty name, SimpleStringProperty desc) {
+  private void init(Form form, SimpleIntegerProperty formClass, SimpleStringProperty name, SimpleStringProperty desc) {
     this.form = form;
     this.formClass = formClass;
     this.name = name;
@@ -35,7 +30,9 @@ public class FormModel {
   }
 
   public void setForm(Form form) {
-    this.form = form;
+    init(form, new SimpleIntegerProperty(form.getFormClass()),
+      new SimpleStringProperty(form.getName()),
+      new SimpleStringProperty(form.getDesc()));
   }
 
   public int getFormClass() {
@@ -48,6 +45,7 @@ public class FormModel {
 
   public void setFormClass(int formClass) {
     this.formClass.set(formClass);
+    this.form.setFormClass(formClass);
   }
 
   public String getName() {
@@ -60,6 +58,7 @@ public class FormModel {
 
   public void setName(String name) {
     this.name.set(name);
+    this.form.setName(name);
   }
 
   public String getDesc() {
@@ -72,5 +71,6 @@ public class FormModel {
 
   public void setDesc(String desc) {
     this.desc.set(desc);
+    this.form.setDesc(desc);
   }
 }
