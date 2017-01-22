@@ -2,6 +2,7 @@ package data;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,9 +22,9 @@ public class Form {
     this.name = name;
     this.desc = desc;
     this.formClass = formClass;
-    this.feats = new ArrayList<Feat>();
-    for (Feat f : feats) {
-      this.feats.add(f);
+    this.feats = new ArrayList<>();
+    for (Feat feat: feats) {
+      this.feats.add(feat);
     }
   }
 

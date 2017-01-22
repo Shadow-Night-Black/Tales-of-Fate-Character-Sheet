@@ -14,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 
 import java.math.BigDecimal;
 
@@ -65,6 +66,15 @@ public class FormsPanel {
     colDesc.prefWidthProperty().bind(formTable.widthProperty().multiply(6).divide(9));
     colDesc.setMinWidth(300);
     colDesc.setCellValueFactory(new PropertyValueFactory<>("desc"));
+    colDesc.setCellFactory(param -> {
+      TableCell<FormModel, String> cell = new TableCell<>();
+      Text text = new Text();
+      cell.setGraphic(text);
+      cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
+      text.wrappingWidthProperty().bind(colDesc.widthProperty());
+      text.textProperty().bind(cell.itemProperty());
+      return cell ;
+    });
 
     for (Form form: character.getForms()) {
       FormModel model = new FormModel(form);
@@ -179,21 +189,30 @@ public class FormsPanel {
 
     HBox inputFields = new HBox();
 
-    colName.prefWidthProperty().bind(featTable.widthProperty().multiply(2).divide(9));
+    colName.prefWidthProperty().bind(featTable.widthProperty().multiply(100).divide(625));
     colName.setMinWidth(100);
     colName.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-    colBonus.prefWidthProperty().bind(featTable.widthProperty().divide(9));
+    colBonus.prefWidthProperty().bind(featTable.widthProperty().multiply(75).divide(625));
     colBonus.setMinWidth(75);
     colBonus.setCellValueFactory(new PropertyValueFactory<>("bonus"));
 
-    colAttribute.prefWidthProperty().bind(featTable.widthProperty().divide(9));
+    colAttribute.prefWidthProperty().bind(featTable.widthProperty().multiply(150).divide(625));
     colAttribute.setMinWidth(150);
     colAttribute.setCellValueFactory(cellData -> cellData.getValue().attributeProperty());
 
-    colDesc.prefWidthProperty().bind(formTable.widthProperty().multiply(6).divide(9));
+    colDesc.prefWidthProperty().bind(featTable.widthProperty().multiply(300).divide(625));
     colDesc.setMinWidth(300);
     colDesc.setCellValueFactory(new PropertyValueFactory<>("desc"));
+    colDesc.setCellFactory(param -> {
+      TableCell<FeatModel, String> cell = new TableCell<>();
+      Text text = new Text();
+      cell.setGraphic(text);
+      cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
+      text.wrappingWidthProperty().bind(colDesc.widthProperty());
+      text.textProperty().bind(cell.itemProperty());
+      return cell ;
+    });
 
     for (Feat feat: character.getCurrentForm().getFeats()) {
       FeatModel model = new FeatModel(feat);

@@ -2,9 +2,7 @@ package gui;
 
 import data.Attribute;
 import data.ToFCharacter;
-import javafx.application.Platform;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -81,30 +79,4 @@ public class AttributePanel {
   public Pane getPanel() {
     return pane;
   }
-  /**
-   //now generates pane in the constructor
-   GridPane grid = getGridPane();
-
-   int y = 1;
-   for (Attribute a : Attribute.values()) {
-   TextField attributeField = new TextField();
-   Label modifier = new Label("");
-   Label modifiedValue = new Label("");
-   Label modifiedModifier = new Label("");
-
-
-   DecimalFormat fmt = new DecimalFormat("+#0;-#");
-
-
-   attributeField.setText(String.valueOf(character.getBaseAttribute(a)));
-   attributeField.setPrefWidth(35);
-   grid.add(new Label(a.getAbbrevation()), 0, y);
-   grid.add(attributeField, 1, y);
-   grid.add(modifier, 2, y);
-   grid.add(modifiedValue, 3, y);
-   grid.add(modifiedModifier, 4, y);
-   y++;
-   }
-
-   return grid; **/
 }

@@ -76,35 +76,35 @@ public class BlessingsPanel {
 
     tblBlessings = new TableView<>();
 
-    TableColumn<BlessingModel, String> name = new TableColumn("Name");
-    TableColumn<BlessingModel, String> god = new TableColumn("God");
-    TableColumn<BlessingModel, Integer> cost = new TableColumn("Cost");
-    TableColumn<BlessingModel, String> desc = new TableColumn("Description");
-    tblBlessings.getColumns().addAll(name, god, cost, desc);
+    TableColumn<BlessingModel, String> colName = new TableColumn("Name");
+    TableColumn<BlessingModel, String> colGod = new TableColumn("God");
+    TableColumn<BlessingModel, Integer> colCost = new TableColumn("Cost");
+    TableColumn<BlessingModel, String> colDesc = new TableColumn("Description");
+    tblBlessings.getColumns().addAll(colName, colGod, colCost, colDesc);
 
 
-    name.prefWidthProperty().bind(tblBlessings.widthProperty().divide(6));
-    name.setCellValueFactory(new PropertyValueFactory<>("name"));
-    name.setMinWidth(100);
+    colName.prefWidthProperty().bind(tblBlessings.widthProperty().divide(6));
+    colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+    colName.setMinWidth(100);
 
 
-    god.prefWidthProperty().bind(tblBlessings.widthProperty().multiply(3).divide(12));
-    god.setCellValueFactory(cellData -> cellData.getValue().godProperty());
-    god.setMinWidth(150);
+    colGod.prefWidthProperty().bind(tblBlessings.widthProperty().multiply(3).divide(12));
+    colGod.setCellValueFactory(cellData -> cellData.getValue().godProperty());
+    colGod.setMinWidth(150);
 
-    cost.prefWidthProperty().bind(tblBlessings.widthProperty().divide(12));
-    cost.setCellValueFactory(new PropertyValueFactory<>("cost"));
-    cost.setMinWidth(50);
+    colCost.prefWidthProperty().bind(tblBlessings.widthProperty().divide(12));
+    colCost.setCellValueFactory(new PropertyValueFactory<>("cost"));
+    colCost.setMinWidth(50);
 
-    desc.prefWidthProperty().bind(tblBlessings.widthProperty().divide(2));
-    desc.setMinWidth(300);
-    desc.setCellValueFactory(new PropertyValueFactory<>("desc"));
-    desc.setCellFactory(param -> {
+    colDesc.prefWidthProperty().bind(tblBlessings.widthProperty().divide(2));
+    colDesc.setMinWidth(300);
+    colDesc.setCellValueFactory(new PropertyValueFactory<>("desc"));
+    colDesc.setCellFactory(param -> {
       TableCell<BlessingModel, String> cell = new TableCell<>();
       Text text = new Text();
       cell.setGraphic(text);
       cell.setPrefHeight(Control.USE_COMPUTED_SIZE);
-      text.wrappingWidthProperty().bind(desc.widthProperty());
+      text.wrappingWidthProperty().bind(colDesc.widthProperty());
       text.textProperty().bind(cell.itemProperty());
       return cell ;
     });
@@ -114,12 +114,12 @@ public class BlessingsPanel {
 
     TextField txtAddName = new TextField();
     txtAddName.setPromptText("Name");
-    txtAddName.prefWidthProperty().bind(name.widthProperty());
-    txtAddName.minWidthProperty().bind(name.minWidthProperty());
+    txtAddName.prefWidthProperty().bind(colName.widthProperty());
+    txtAddName.minWidthProperty().bind(colName.minWidthProperty());
 
     ComboBox<Attribute> comboAddGod = new ComboBox<>();
-    comboAddGod.prefWidthProperty().bind(god.widthProperty());
-    comboAddGod.minWidthProperty().bind(god.minWidthProperty());
+    comboAddGod.prefWidthProperty().bind(colGod.widthProperty());
+    comboAddGod.minWidthProperty().bind(colGod.minWidthProperty());
     comboAddGod.setCellFactory(
       new Callback<ListView<Attribute>, ListCell<Attribute>>() {
         public ListCell<Attribute > call(ListView<Attribute> p) {
@@ -154,8 +154,8 @@ public class BlessingsPanel {
 
     TextField txtAddCost = new TextField();
     txtAddCost.setPromptText("Cost");
-    txtAddCost.prefWidthProperty().bind(cost.widthProperty());
-    txtAddCost.minWidthProperty().bind(cost.minWidthProperty());
+    txtAddCost.prefWidthProperty().bind(colCost.widthProperty());
+    txtAddCost.minWidthProperty().bind(colCost.minWidthProperty());
     txtAddCost.textProperty().addListener((observable, oldValue, newValue) -> {
       if (!newValue.matches("\\d*")) {
         Platform.runLater(() -> {
@@ -165,8 +165,8 @@ public class BlessingsPanel {
 
     TextField txtAddDesc = new TextField();
     txtAddDesc.setPromptText("Blessing's Desc");
-    txtAddDesc.prefWidthProperty().bind(desc.widthProperty());
-    txtAddDesc.minWidthProperty().bind(desc.minWidthProperty());
+    txtAddDesc.prefWidthProperty().bind(colDesc.widthProperty());
+    txtAddDesc.minWidthProperty().bind(colDesc.minWidthProperty());
 
 
     for (Blessing blessing: character.getTotem().getBlessings()) {
