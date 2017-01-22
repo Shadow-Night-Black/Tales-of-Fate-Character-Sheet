@@ -302,6 +302,7 @@ public class FormsPanel {
       formTable.getItems().add(model);
     }
 
+    featTable.setStyle("");
     featTable.getItems().clear();
     for (Feat feat: character.getCurrentForm().getFeats()) {
       FeatModel model = new FeatModel(feat);
