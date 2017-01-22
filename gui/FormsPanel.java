@@ -163,6 +163,20 @@ public class FormsPanel {
 
     featTable.getColumns().addAll(colName, colBonus, colAttribute, colDesc);
 
+    featTable.setRowFactory(param -> new TableRow<FeatModel>() {
+      public void updateItem(FeatModel model, boolean empty) {
+        if (model != null && !empty) {
+          if (model.isActive()) {
+            setStyle("-fx-control-inner-background: green");
+          } else {
+            setStyle("-fx-control-inner-background: red");
+          }
+        }else {
+          setStyle("");
+        }
+      }
+    });
+
     HBox inputFields = new HBox();
 
     colName.prefWidthProperty().bind(featTable.widthProperty().multiply(2).divide(9));
@@ -232,7 +246,7 @@ public class FormsPanel {
         model.setDesc(txtDesc.getText());
         model.setBonus(txtBonus.getNumber().intValue());
         model.setAttribute(comboAttributes.getValue().name());
-        update(character);
+        mainFrame.update(character);
       }
     });
 
@@ -243,17 +257,18 @@ public class FormsPanel {
       if (model != null) {
         Feat feat = model.getFeat();
         character.getCurrentForm().removeFeat(feat);
-        update(character);
+        mainFrame.update(character);
       }
     });
 
     Button btnToggleActive = new Button("Toggle Ability");
-
     btnToggleActive.setOnAction(event -> {
       FeatModel model = featTable.getSelectionModel().getSelectedItem();
+      System.out.println("toggling feat");
       if (model != null) {
+        System.out.println("Name: " + model.getName() + " to " + !model.isActive());
         model.setActive(!model.isActive());
-        update(character);
+        mainFrame.update(character);
       }
     });
 

@@ -16,11 +16,7 @@ public class FeatModel {
   private SimpleBooleanProperty active;
 
   public FeatModel(Feat feat) {
-    init(feat, new SimpleIntegerProperty(feat.getBonus()),
-      new SimpleStringProperty(feat.getName()),
-      new SimpleStringProperty(feat.getDesc()),
-      new SimpleStringProperty(feat.getAttribute().name()),
-      new SimpleBooleanProperty(feat.isActive()));
+    setFeat(feat);
   }
 
   public FeatModel(SimpleIntegerProperty bonus, SimpleStringProperty name, SimpleStringProperty desc, SimpleStringProperty attribute, SimpleBooleanProperty active) {
@@ -42,7 +38,12 @@ public class FeatModel {
   }
 
   public void setFeat(Feat feat) {
-    this.feat = feat;
+    init(feat, new SimpleIntegerProperty(feat.getBonus()),
+      new SimpleStringProperty(feat.getName()),
+      new SimpleStringProperty(feat.getDesc()),
+      new SimpleStringProperty(feat.getAttribute().name()),
+      new SimpleBooleanProperty(feat.isActive()));
+
   }
 
   public int getBonus() {
@@ -55,6 +56,7 @@ public class FeatModel {
 
   public void setBonus(int bonus) {
     this.bonus.set(bonus);
+    this.feat.setBonus(bonus);
   }
 
   public String getName() {
@@ -67,6 +69,7 @@ public class FeatModel {
 
   public void setName(String name) {
     this.name.set(name);
+    this.feat.setName(name);
   }
 
   public String getDesc() {
@@ -79,6 +82,7 @@ public class FeatModel {
 
   public void setDesc(String desc) {
     this.desc.set(desc);
+    this.feat.setDesc(desc);
   }
 
   public String getAttribute() {
@@ -91,6 +95,7 @@ public class FeatModel {
 
   public void setAttribute(String attribute) {
     this.attribute.set(attribute);
+    this.feat.setAttribute(Attribute.valueOf(attribute));
   }
 
   public boolean isActive() {
@@ -103,6 +108,7 @@ public class FeatModel {
 
   public void setActive(boolean active) {
     this.active.set(active);
+    this.feat.setActive(active);
   }
 }
 
