@@ -74,7 +74,7 @@ public class BlessingsPanel {
     VBox cntBlessings = new VBox();
     Label lblBlessings = new Label("Blessings");
 
-    tblBlessings = new TableView();
+    tblBlessings = new TableView<>();
 
     TableColumn<BlessingModel, String> name = new TableColumn("Name");
     TableColumn<BlessingModel, String> god = new TableColumn("God");
@@ -121,33 +121,32 @@ public class BlessingsPanel {
     comboAddGod.prefWidthProperty().bind(god.widthProperty());
     comboAddGod.minWidthProperty().bind(god.minWidthProperty());
     comboAddGod.setCellFactory(
-            new Callback<ListView<Attribute>, ListCell<Attribute>>() {
-              public ListCell<Attribute > call(ListView<Attribute> p) {
-                ListCell cell = new ListCell<Attribute>() {
-                  protected void updateItem(Attribute item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                      setText("");
-                    } else {
-                      setText(item.getGod());
-                    }
-                  }
-                };
-                return cell;
+      new Callback<ListView<Attribute>, ListCell<Attribute>>() {
+        public ListCell<Attribute > call(ListView<Attribute> p) {
+          return new ListCell<Attribute>() {
+            protected void updateItem(Attribute item, boolean empty) {
+              super.updateItem(item, empty);
+              if (empty) {
+                setText("");
+              } else {
+                setText(item.getGod());
               }
-            });
+            }
+          };
+        }
+      });
 
     comboAddGod.setButtonCell(
-            new ListCell<Attribute>() {
-              protected void updateItem(Attribute t, boolean bln) {
-                super.updateItem(t, bln);
-                if (bln) {
-                  setText("");
-                } else {
-                  setText(t.getGod());
-                }
-              }
-            });
+      new ListCell<Attribute>() {
+        protected void updateItem(Attribute t, boolean bln) {
+          super.updateItem(t, bln);
+          if (bln) {
+            setText("");
+          } else {
+            setText(t.getGod());
+          }
+        }
+      });
 
 
     comboAddGod.getItems().addAll(Attribute.values());
@@ -158,11 +157,11 @@ public class BlessingsPanel {
     txtAddCost.prefWidthProperty().bind(cost.widthProperty());
     txtAddCost.minWidthProperty().bind(cost.minWidthProperty());
     txtAddCost.textProperty().addListener((observable, oldValue, newValue) -> {
-          if (!newValue.matches("\\d*")) {
-            Platform.runLater(() -> {
-              txtAddCost.setText(newValue.replaceAll("[^\\d*]", ""));
-              txtAddCost.positionCaret(txtAddCost.getLength());
-            });}});
+      if (!newValue.matches("\\d*")) {
+        Platform.runLater(() -> {
+          txtAddCost.setText(newValue.replaceAll("[^\\d*]", ""));
+          txtAddCost.positionCaret(txtAddCost.getLength());
+        });}});
 
     TextField txtAddDesc = new TextField();
     txtAddDesc.setPromptText("Blessing's Desc");
@@ -183,12 +182,12 @@ public class BlessingsPanel {
     btnAddBless.setOnAction(actionEvent -> {
       try {
         character.getTotem().addBlessing(new Blessing(
-                txtAddName.getText(),
-                comboAddGod.getValue(),
-                Integer.parseInt(txtAddCost.getText()),
-                txtAddDesc.getText()));
+          txtAddName.getText(),
+          comboAddGod.getValue(),
+          Integer.parseInt(txtAddCost.getText()),
+          txtAddDesc.getText()));
         mainFrame.update(character);
-      }catch (NumberFormatException e) {};
+      }catch (NumberFormatException e) {}
     });
 
     Button btnEditBless = new Button("Edit");
@@ -208,9 +207,9 @@ public class BlessingsPanel {
     btnRemoveBless.setOnAction(actionEvent -> {
       BlessingModel model = tblBlessings.getSelectionModel().getSelectedItem();
       if (model != null) {
-      Blessing blessing = model.getBlessing();
-      character.getTotem().deleteBlessing(blessing);
-      update(character);
+        Blessing blessing = model.getBlessing();
+        character.getTotem().deleteBlessing(blessing);
+        update(character);
       }
     });
 
@@ -228,7 +227,7 @@ public class BlessingsPanel {
 
     cntBlessings.getChildren().addAll(lblBlessings, tblBlessings, addBlessing, controls);
 
-    grid.setHgrow(cntBlessings, Priority.ALWAYS);
+    GridPane.setHgrow(cntBlessings, Priority.ALWAYS);
     grid.addRow(0, totemBox, cntBlessings);
 
   }

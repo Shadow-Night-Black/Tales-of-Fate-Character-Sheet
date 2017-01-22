@@ -18,7 +18,6 @@ import java.util.Optional;
  */
 public class StatsPanel {
 
-  private final MainFrame mainFrame;
   private Label lblBaseBody;
   private Label lblCurrentBody;
   private Label lblBaseMind;
@@ -38,7 +37,6 @@ public class StatsPanel {
 
   public StatsPanel(MainFrame mainFrame, ToFCharacter character) {
     this.toFCharacter = character;
-    this.mainFrame = mainFrame;
     gridPoints = MainFrame.getGridPane();
     gridHealth = MainFrame.getGridPane();
 

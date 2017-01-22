@@ -51,6 +51,7 @@ public class MainFrame extends Application {
     setupMenuBar(root);
 
     TabPane mainView = new TabPane();
+    mainView.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
     attributePanel = new AttributePanel(this, character);
     Tab attributes = new Tab("Attributes", attributePanel.getPanel());

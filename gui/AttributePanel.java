@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class AttributePanel {
-  private final MainFrame mainFrame;
   private Map<Attribute, NumberSpinner> baseValues;
   private Map<Attribute, Label> baseMods;
   private Map<Attribute, Label> modifiedValues;
@@ -24,7 +23,6 @@ public class AttributePanel {
   private final GridPane pane;
 
   public AttributePanel(MainFrame mainFrame, ToFCharacter character){
-    this.mainFrame = mainFrame;
     baseValues = new TreeMap<>();
     baseMods = new TreeMap<>();
     modifiedValues = new TreeMap<>();

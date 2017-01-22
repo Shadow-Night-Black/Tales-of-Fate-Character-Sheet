@@ -34,8 +34,8 @@ public class FormsPanel {
 
 
 
-    mainGrid.setHgrow(formBox, Priority.ALWAYS);
-    mainGrid.setHgrow(featsBox, Priority.ALWAYS);
+    GridPane.setHgrow(formBox, Priority.ALWAYS);
+    GridPane.setHgrow(featsBox, Priority.ALWAYS);
     mainGrid.add(formBox, 0, 0);
     mainGrid.add(featsBox, 1, 0);
 
