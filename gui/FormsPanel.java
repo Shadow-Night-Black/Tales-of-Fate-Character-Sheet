@@ -55,6 +55,7 @@ public class FormsPanel {
     formTable.getColumns().addAll(colName, colClass, colDesc);
     formTable.setRowFactory(param -> new TableRow<FormModel>() {
       public void updateItem(FormModel model, boolean empty) {
+        super.updateItem(model, empty);
         if (model != null && !empty) {
           if (model.getName() == character.getCurrentForm().getName()) {
             setStyle("-fx-control-inner-background: green");
@@ -69,15 +70,16 @@ public class FormsPanel {
 
     HBox inputFields = new HBox();
 
-    colName.prefWidthProperty().bind(formTable.widthProperty().multiply(2).divide(9));
-    colName.setMinWidth(100);
+    final int TOTALSIZE = 500;
+    colName.prefWidthProperty().bind(formTable.widthProperty().multiply(150).divide(TOTALSIZE));
+    colName.setMinWidth(150);
     colName.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-    colClass.prefWidthProperty().bind(formTable.widthProperty().divide(9));
-    colClass.setMinWidth(75);
+    colClass.prefWidthProperty().bind(formTable.widthProperty().multiply(50).divide(TOTALSIZE));
+    colClass.setMinWidth(50);
     colClass.setCellValueFactory(new PropertyValueFactory<>("formClass"));
 
-    colDesc.prefWidthProperty().bind(formTable.widthProperty().multiply(6).divide(9));
+    colDesc.prefWidthProperty().bind(formTable.widthProperty().multiply(300).divide(TOTALSIZE));
     colDesc.setMinWidth(300);
     colDesc.setCellValueFactory(new PropertyValueFactory<>("desc"));
     colDesc.setCellFactory(param -> {
@@ -189,6 +191,7 @@ public class FormsPanel {
 
     featTable.setRowFactory(param -> new TableRow<FeatModel>() {
       public void updateItem(FeatModel model, boolean empty) {
+        super.updateItem(model, empty);
         if (model != null && !empty) {
           if (model.isActive()) {
             setStyle("-fx-control-inner-background: green");
@@ -203,19 +206,21 @@ public class FormsPanel {
 
     HBox inputFields = new HBox();
 
-    colName.prefWidthProperty().bind(featTable.widthProperty().multiply(100).divide(625));
+    final int TOTALSIZE = 600;
+
+    colName.prefWidthProperty().bind(featTable.widthProperty().multiply(100).divide(TOTALSIZE));
     colName.setMinWidth(100);
     colName.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-    colBonus.prefWidthProperty().bind(featTable.widthProperty().multiply(75).divide(625));
+    colBonus.prefWidthProperty().bind(featTable.widthProperty().multiply(75).divide(TOTALSIZE));
     colBonus.setMinWidth(75);
     colBonus.setCellValueFactory(new PropertyValueFactory<>("bonus"));
 
-    colAttribute.prefWidthProperty().bind(featTable.widthProperty().multiply(150).divide(625));
-    colAttribute.setMinWidth(150);
+    colAttribute.prefWidthProperty().bind(featTable.widthProperty().multiply(125).divide(TOTALSIZE));
+    colAttribute.setMinWidth(125);
     colAttribute.setCellValueFactory(cellData -> cellData.getValue().attributeProperty());
 
-    colDesc.prefWidthProperty().bind(featTable.widthProperty().multiply(300).divide(625));
+    colDesc.prefWidthProperty().bind(featTable.widthProperty().multiply(300).divide(TOTALSIZE));
     colDesc.setMinWidth(300);
     colDesc.setCellValueFactory(new PropertyValueFactory<>("desc"));
     colDesc.setCellFactory(param -> {
