@@ -1,4 +1,4 @@
-package gui;
+package gui.models;
 
 import data.Attribute;
 import data.Feat;
