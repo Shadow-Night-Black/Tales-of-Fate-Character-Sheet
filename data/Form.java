@@ -77,4 +77,12 @@ public class Form {
   public void removeFeat(Feat feat) {
     feats.remove(feat);
   }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof Form))
+      return false;
+    Form form = (Form) obj;
+    return form.getName().equals(name);
+  }
 }

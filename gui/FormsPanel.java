@@ -14,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
 import java.math.BigDecimal;
@@ -52,6 +53,19 @@ public class FormsPanel {
     TableColumn<FormModel, String> colDesc = new TableColumn<>("Description");
 
     formTable.getColumns().addAll(colName, colClass, colDesc);
+    formTable.setRowFactory(param -> new TableRow<FormModel>() {
+      public void updateItem(FormModel model, boolean empty) {
+        if (model != null && !empty) {
+          if (model.getName() == character.getCurrentForm().getName()) {
+            setStyle("-fx-control-inner-background: green");
+          } else {
+            setStyle("");
+          }
+        }else {
+          setStyle("");
+        }
+      }
+    });
 
     HBox inputFields = new HBox();
 
@@ -121,7 +135,7 @@ public class FormsPanel {
         model.setName(txtName.getText());
         model.setFormClass(comboClass.getValue());
         model.setDesc(txtDesc.getText());
-        update(character);
+        mainFrame.update(character);
       }
     });
 
@@ -132,7 +146,7 @@ public class FormsPanel {
       if (model != null) {
         Form form = model.getForm();
         character.removeForm(form);
-        update(character);
+        mainFrame.update(character);
       }
     });
 
@@ -142,7 +156,7 @@ public class FormsPanel {
       FormModel model = formTable.getSelectionModel().getSelectedItem();
       if (model != null) {
         character.setCurrentForm(model.getForm());
-        update(character);
+        mainFrame.update(character);
       }
     });
 
@@ -283,9 +297,7 @@ public class FormsPanel {
     Button btnToggleActive = new Button("Toggle Ability");
     btnToggleActive.setOnAction(event -> {
       FeatModel model = featTable.getSelectionModel().getSelectedItem();
-      System.out.println("toggling feat");
       if (model != null) {
-        System.out.println("Name: " + model.getName() + " to " + !model.isActive());
         model.setActive(!model.isActive());
         mainFrame.update(character);
       }
@@ -315,6 +327,7 @@ public class FormsPanel {
 
   public void update(ToFCharacter character) {
     formTable.getItems().clear();
+    formTable.setStyle("");
 
     for (Form form: character.getForms()) {
       FormModel model = new FormModel(form);

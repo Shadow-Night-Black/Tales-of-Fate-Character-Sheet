@@ -6,6 +6,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.util.ArrayList;
@@ -67,15 +68,15 @@ public class ToFCharacter {
   public void setAttribute(Attribute attribute, int value) {
     System.out.println("Changing " + attribute + " from " + this.attributes.get(attribute) + " to " + value);
     int difference = value - this.attributes.get(attribute);
-      List<Integer> segments;
-      if (attribute.isPhysical()) {
-        segments = body;
-      }else {
-        segments = mind;
-      }
-      for(int i = 0; i <= 6; i++) {
-        segments.set(i, Math.max(segments.get(i) + difference, 0));
-      }
+    List<Integer> segments;
+    if (attribute.isPhysical()) {
+      segments = body;
+    }else {
+      segments = mind;
+    }
+    for(int i = 0; i <= 6; i++) {
+      segments.set(i, Math.max(segments.get(i) + difference, 0));
+    }
     this.attributes.put(attribute, value);
   }
 
@@ -109,7 +110,7 @@ public class ToFCharacter {
       Marshaller m = jc.createMarshaller();
       m.setProperty( Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE );
       if (f.exists() && (f.isDirectory() || !f.canWrite())) {
-          throw new RuntimeException("File name Invalid!");
+        throw new RuntimeException("File name Invalid!");
       }
       m.marshal(this, f);
     } catch (JAXBException e) {
@@ -122,12 +123,24 @@ public class ToFCharacter {
       JAXBContext jc  = JAXBContext.newInstance(ToFCharacter.class);
       Unmarshaller u = jc.createUnmarshaller();
       if (f.exists() && f.isFile() && f.canRead()) {
-        return(ToFCharacter) u.unmarshal(f);
+        ToFCharacter character = (ToFCharacter) u.unmarshal(f);
+        character.fixCurrentForm();
+        return character;
       }
     } catch (JAXBException e) {
       e.printStackTrace();
     }
     throw new RuntimeException("Couldn't load character!");
+  }
+
+  private void fixCurrentForm() {
+    for (Form form: forms) {
+      if (form.equals(currentForm)) {
+        this.currentForm = form;
+        return;
+      }
+    }
+   // throw new RuntimeException("CurrentForm Not FOUND!!!!");
   }
 
 
@@ -143,9 +156,11 @@ public class ToFCharacter {
     return forms;
   }
 
+  @Deprecated
   public void setForms(List<Form> forms) {
-    this.forms = forms;
+    throw new RuntimeException("Don't use SetForms()");
   }
+
 
   public List<Feat> getAbilities() {
     return abilities;
@@ -264,7 +279,7 @@ public class ToFCharacter {
     int dc = 1;
     for (Attribute attribute: Attribute.values()) {
       if (attribute.isPhysical()){
-       dc += Attribute.getModifier(this.getBaseAttribute(attribute));
+        dc += Attribute.getModifier(this.getBaseAttribute(attribute));
       }
     }
     return dc;
