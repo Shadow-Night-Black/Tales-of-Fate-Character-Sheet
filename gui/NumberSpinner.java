@@ -59,8 +59,6 @@ public class NumberSpinner extends HBox {
     // TextField
     numberField = new NumberTextField(value, nf);
     numberField.setId(NUMBER_FIELD);
-    //TOF: set ColumnCOunt for Atrributes
-    numberField.setPrefColumnCount(2);
 
     // Enable arrow keys for dec/inc
     numberField.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
@@ -177,6 +175,10 @@ public class NumberSpinner extends HBox {
 
   public final BigDecimal getNumber() {
     return numberField.getNumber();
+  }
+
+  public NumberTextField getNumberField() {
+    return  numberField;
   }
 
   // debugging layout bounds

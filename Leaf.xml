@@ -38,25 +38,25 @@
     <body>22</body>
     <currentFate>5</currentFate>
     <currentForm>
-        <desc>An incorpeal form, perfect for scouting</desc>
-        <formClass>3</formClass>
+        <desc>An incorpeal feat, perfect for scouting</desc>
+        <bonus>3</bonus>
         <name>Shadow</name>
     </currentForm>
     <currentInit>6</currentInit>
     <fateDamage>0</fateDamage>
     <forms>
         <desc>Your normal everyday body</desc>
-        <formClass>3</formClass>
+        <bonus>3</bonus>
         <name>You</name>
     </forms>
     <forms>
-        <desc>An incorpeal form, perfect for scouting</desc>
-        <formClass>3</formClass>
+        <desc>An incorpeal feat, perfect for scouting</desc>
+        <bonus>3</bonus>
         <name>Shadow</name>
     </forms>
     <forms>
         <desc>Small, light and nimble</desc>
-        <formClass>2</formClass>
+        <bonus>2</bonus>
         <name>Cat</name>
     </forms>
     <mind>27</mind>

@@ -33,7 +33,7 @@ public class AttributePanel {
 
     for(Attribute attribute: Attribute.values()) {
       NumberSpinner txt = new NumberSpinner();
-      //txt.setPrefColumnCount(2); //Now in NumberTextField
+      txt.getNumberField().setPrefColumnCount(2);
       int baseValue = character.getBaseAttribute(attribute);
       txt.setNumber(new BigDecimal(baseValue));
 
@@ -76,7 +76,7 @@ public class AttributePanel {
       baseValues.get(attribute).setNumber(new BigDecimal(value));
       baseMods.get(attribute).setText(fmt.format(Attribute.getModifier(value)));
       modifiedValues.get(attribute).setText(String.valueOf(moddedValue));
-      baseMods.get(attribute).setText(fmt.format(Attribute.getModifier(moddedValue)));
+      modifiedMods.get(attribute).setText(fmt.format(Attribute.getModifier(moddedValue)));
     }
   }
 

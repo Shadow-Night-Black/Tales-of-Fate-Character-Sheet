@@ -43,10 +43,14 @@ public class Form {
     this.feats = feats;
   }
 
+  public void addFeat (Feat feat) {
+    this.feats.add(feat);
+  }
+
   public int getAttributeBonus(Attribute attribute) {
     int bonus = 0;
     for (Feat feat: feats) {
-      if (feat.getAttribute() == attribute) {
+      if (feat.getAttribute() == attribute && feat.isActive()) {
         bonus += feat.getBonus();
       }
     }
@@ -67,5 +71,9 @@ public class Form {
 
   public void setDesc(String desc) {
     this.desc = desc;
+  }
+
+  public void removeFeat(Feat feat) {
+    feats.remove(feat);
   }
 }

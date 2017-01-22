@@ -1,5 +1,7 @@
 package gui;
 
+import data.Attribute;
+import data.Feat;
 import data.Form;
 import data.ToFCharacter;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -12,17 +14,35 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
+
+import java.math.BigDecimal;
 
 /**
  * Created by AQU-mark on 22/12/16.
  */
 public class FormsPanel {
   private TableView<FormModel> formTable;
+  private  TableView<FeatModel> featTable;
   private final GridPane mainGrid;
 
   public FormsPanel(MainFrame mainFrame, ToFCharacter character) {
     mainGrid = MainFrame.getGridPane();
 
+    VBox formBox = getFormBox(mainFrame, character);
+
+    VBox featsBox = getFeatBox(mainFrame, character);
+
+
+
+    mainGrid.setHgrow(formBox, Priority.ALWAYS);
+    mainGrid.setHgrow(featsBox, Priority.ALWAYS);
+    mainGrid.add(formBox, 0, 0);
+    mainGrid.add(featsBox, 1, 0);
+
+  }
+
+  private VBox getFormBox(MainFrame mainFrame, ToFCharacter character) {
     VBox formBox = new VBox();
 
     formTable = new TableView<>();
@@ -129,15 +149,131 @@ public class FormsPanel {
     controls.setAlignment(Pos.CENTER);
 
     formBox.getChildren().addAll(formTable, inputFields, controls);
-
-    VBox featsBox = new VBox();
-
-    mainGrid.setHgrow(formBox, Priority.ALWAYS);
-    mainGrid.setHgrow(featsBox, Priority.ALWAYS);
-    mainGrid.add(formBox, 0, 0);
-    mainGrid.add(featsBox, 1, 0);
-
+    return formBox;
   }
+
+  private VBox getFeatBox(MainFrame mainFrame, ToFCharacter character) {
+    VBox featBox = new VBox();
+
+    featTable = new TableView<>();
+
+    TableColumn<FeatModel, String> colName = new TableColumn<>("Name");
+    TableColumn<FeatModel, Integer> colBonus = new TableColumn<>("Bonus");
+    TableColumn<FeatModel, String> colAttribute = new TableColumn<>("Attribute");
+    TableColumn<FeatModel, String> colDesc = new TableColumn<>("Description");
+
+    featTable.getColumns().addAll(colName, colBonus, colAttribute, colDesc);
+
+    HBox inputFields = new HBox();
+
+    colName.prefWidthProperty().bind(featTable.widthProperty().multiply(2).divide(9));
+    colName.setMinWidth(100);
+    colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+    colBonus.prefWidthProperty().bind(featTable.widthProperty().divide(9));
+    colBonus.setMinWidth(75);
+    colBonus.setCellValueFactory(new PropertyValueFactory<>("bonus"));
+
+    colAttribute.prefWidthProperty().bind(featTable.widthProperty().divide(9));
+    colAttribute.setMinWidth(150);
+    colAttribute.setCellValueFactory(cellData -> cellData.getValue().attributeProperty());
+
+    colDesc.prefWidthProperty().bind(formTable.widthProperty().multiply(6).divide(9));
+    colDesc.setMinWidth(300);
+    colDesc.setCellValueFactory(new PropertyValueFactory<>("desc"));
+
+    for (Feat feat: character.getCurrentForm().getFeats()) {
+      FeatModel model = new FeatModel(feat);
+      featTable.getItems().add(model);
+    }
+
+    TextField txtName = new TextField();
+    txtName.setPromptText("Name");
+    txtName.prefWidthProperty().bind(colName.widthProperty());
+    txtName.minWidthProperty().bind(colName.minWidthProperty());
+
+    ComboBox<Attribute> comboAttributes = new ComboBox<>();
+    comboAttributes.prefWidthProperty().bind(colAttribute.widthProperty());
+    comboAttributes.minWidthProperty().bind(colAttribute.minWidthProperty());
+
+    comboAttributes.getItems().addAll(Attribute.values());
+    comboAttributes.getSelectionModel().selectFirst();
+
+    NumberTextField txtBonus = new NumberTextField();
+    txtBonus.prefWidthProperty().bind(colBonus.widthProperty());
+    txtBonus.minWidthProperty().bind(colBonus.minWidthProperty());
+    txtBonus.setPromptText("Bonus");
+
+    TextField txtDesc = new TextField();
+    txtDesc.setPromptText("Description");
+    txtDesc.prefWidthProperty().bind(colDesc.widthProperty());
+    txtDesc.minWidthProperty().bind(colDesc.minWidthProperty());
+
+    inputFields.getChildren().addAll(txtName, txtBonus, comboAttributes, txtDesc);
+
+    HBox controls = new HBox();
+
+    Button btnAddForm = new Button("Add");
+    btnAddForm.setOnAction(actionEvent -> {
+      character.getCurrentForm().addFeat( new Feat(
+        txtName.getText(),
+        txtDesc.getText(),
+        comboAttributes.getValue(),
+        txtBonus.getNumber().intValue(),
+        true));
+      System.out.println(txtBonus.getNumber().intValue());
+      mainFrame.update(character);
+    });
+
+    Button btnEditForm= new Button("Edit");
+    btnEditForm.setOnAction(actionEvent -> {
+      FeatModel model = featTable.getSelectionModel().getSelectedItem();
+      if (model != null) {
+        model.setName(txtName.getText());
+        model.setDesc(txtDesc.getText());
+        model.setBonus(txtBonus.getNumber().intValue());
+        model.setAttribute(comboAttributes.getValue().name());
+        update(character);
+      }
+    });
+
+    Button btnRemoveForm = new Button("Delete");
+
+    btnRemoveForm.setOnAction(actionEvent -> {
+      FeatModel model = featTable.getSelectionModel().getSelectedItem();
+      if (model != null) {
+        Feat feat = model.getFeat();
+        character.getCurrentForm().removeFeat(feat);
+        update(character);
+      }
+    });
+
+    Button btnToggleActive = new Button("Toggle Ability");
+
+    btnToggleActive.setOnAction(event -> {
+      FeatModel model = featTable.getSelectionModel().getSelectedItem();
+      if (model != null) {
+        model.setActive(!model.isActive());
+        update(character);
+      }
+    });
+
+    featTable.getSelectionModel().selectedItemProperty().addListener((observableValue, t1, featModel) -> {
+      if (featModel != null) {
+        txtName.setText(featModel.getName());
+        txtDesc.setText(featModel.getDesc());
+        txtBonus.setNumber(new BigDecimal(featModel.getBonus()));
+        comboAttributes.getSelectionModel().select(Attribute.valueOf(featModel.getAttribute()));
+      }
+    });
+
+    controls.getChildren().addAll(btnAddForm, btnEditForm, btnToggleActive, btnRemoveForm);
+    controls.setAlignment(Pos.CENTER);
+
+    featBox.getChildren().addAll(featTable, inputFields, controls);
+    return featBox;
+  }
+
 
   public Node getPanel() {
 
@@ -150,6 +286,12 @@ public class FormsPanel {
     for (Form form: character.getForms()) {
       FormModel model = new FormModel(form);
       formTable.getItems().add(model);
+    }
+
+    featTable.getItems().clear();
+    for (Feat feat: character.getCurrentForm().getFeats()) {
+      FeatModel model = new FeatModel(feat);
+      featTable.getItems().add(model);
     }
   }
 
