@@ -1,9 +1,6 @@
 package gui;
 
-import data.Attribute;
-import data.Feat;
-import data.Form;
-import data.ToFCharacter;
+import data.*;
 import gui.models.FeatModel;
 import gui.models.FormModel;
 import javafx.geometry.Pos;
@@ -26,8 +23,10 @@ public class FormsPanel {
   private TableView<FormModel> formTable;
   private  TableView<FeatModel> featTable;
   private final GridPane mainGrid;
+  private boolean advantageMode;
 
   public FormsPanel(MainFrame mainFrame, ToFCharacter character) {
+    advantageMode = false;
     mainGrid = MainFrame.getGridPane();
 
     VBox formBox = getFormBox(mainFrame, character);
@@ -214,7 +213,7 @@ public class FormsPanel {
 
     colBonus.prefWidthProperty().bind(featTable.widthProperty().multiply(75).divide(TOTALSIZE));
     colBonus.setMinWidth(75);
-    colBonus.setCellValueFactory(new PropertyValueFactory<>("bonus"));
+    colBonus.setCellValueFactory(new PropertyValueFactory<>("value"));
 
     colAttribute.prefWidthProperty().bind(featTable.widthProperty().multiply(125).divide(TOTALSIZE));
     colAttribute.setMinWidth(125);
@@ -254,25 +253,44 @@ public class FormsPanel {
     txtBonus.prefWidthProperty().bind(colBonus.widthProperty());
     txtBonus.minWidthProperty().bind(colBonus.minWidthProperty());
     txtBonus.setPromptText("Bonus");
+    txtBonus.managedProperty().bind(txtBonus.visibleProperty());
+
+    ComboBox<Advantage> comboAdvantages = new ComboBox<>();
+    comboAdvantages.prefWidthProperty().bind(colBonus.widthProperty());
+    comboAdvantages.minWidthProperty().bind(colBonus.minWidthProperty());
+
+    comboAdvantages.getItems().addAll(Advantage.values());
+    comboAdvantages.getSelectionModel().select(Advantage.ADVANTAGE);
+
+    comboAdvantages.managedProperty().bind(comboAdvantages.visibleProperty());
+    comboAdvantages.setVisible(false);
 
     TextField txtDesc = new TextField();
     txtDesc.setPromptText("Description");
     txtDesc.prefWidthProperty().bind(colDesc.widthProperty());
     txtDesc.minWidthProperty().bind(colDesc.minWidthProperty());
 
-    inputFields.getChildren().addAll(txtName, txtBonus, comboAttributes, txtDesc);
+    inputFields.getChildren().addAll(txtName, txtBonus,comboAdvantages, comboAttributes, txtDesc);
 
     HBox controls = new HBox();
 
     Button btnAddForm = new Button("Add");
     btnAddForm.setOnAction(actionEvent -> {
-      character.getCurrentForm().addFeat( new Feat(
-        txtName.getText(),
-        txtDesc.getText(),
-        comboAttributes.getValue(),
-        txtBonus.getNumber().intValue(),
-        true));
-      System.out.println(txtBonus.getNumber().intValue());
+      if (advantageMode) {
+        character.getCurrentForm().addFeat(new Feat(
+          txtName.getText(),
+          txtDesc.getText(),
+          comboAttributes.getValue(),
+          comboAdvantages.getValue(),
+          true));
+      }else {
+        character.getCurrentForm().addFeat(new Feat(
+          txtName.getText(),
+          txtDesc.getText(),
+          comboAttributes.getValue(),
+          txtBonus.getNumber().intValue(),
+          true));
+      }
       mainFrame.update(character);
     });
 
@@ -282,7 +300,12 @@ public class FormsPanel {
       if (model != null) {
         model.setName(txtName.getText());
         model.setDesc(txtDesc.getText());
-        model.setBonus(txtBonus.getNumber().intValue());
+        model.setAdvantageMode(advantageMode);
+        if (advantageMode) {
+          model.setBonus(comboAdvantages.getValue().toInt());
+        }else {
+          model.setBonus(txtBonus.getNumber().intValue());
+        }
         model.setAttribute(comboAttributes.getValue().name());
         mainFrame.update(character);
       }
@@ -296,6 +319,21 @@ public class FormsPanel {
         Feat feat = model.getFeat();
         character.getCurrentForm().removeFeat(feat);
         mainFrame.update(character);
+      }
+    });
+
+    Button btnToggleAdvantageMode = new Button("Use advantages");
+    btnToggleAdvantageMode.setOnAction(event -> {
+      if (advantageMode) {
+        advantageMode = false;
+        btnToggleAdvantageMode.setText("Use advantages");
+        comboAdvantages.setVisible(false);
+        txtBonus.setVisible(true);
+      }else {
+        advantageMode = true;
+        btnToggleAdvantageMode.setText("Use stat bonuses");
+        comboAdvantages.setVisible(true);
+        txtBonus.setVisible(false);
       }
     });
 
@@ -313,16 +351,23 @@ public class FormsPanel {
         txtName.setText(featModel.getName());
         txtDesc.setText(featModel.getDesc());
         txtBonus.setNumber(new BigDecimal(featModel.getBonus()));
+        System.out.println(featModel.getBonus());
+        comboAdvantages.getSelectionModel().select(Advantage.fromInt(featModel.getBonus()));
         comboAttributes.getSelectionModel().select(Attribute.valueOf(featModel.getAttribute()));
+        if (featModel.isAdvantageMode() != advantageMode) {
+          btnToggleAdvantageMode.fire();
+        }
       }
     });
 
-    controls.getChildren().addAll(btnAddForm, btnEditForm, btnToggleActive, btnRemoveForm);
+    controls.getChildren().addAll(btnAddForm, btnEditForm, btnToggleAdvantageMode, btnToggleActive, btnRemoveForm);
     controls.setAlignment(Pos.CENTER);
 
     featBox.getChildren().addAll(featTable, inputFields, controls);
     return featBox;
   }
+
+
 
 
   public Node getPanel() {

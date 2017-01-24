@@ -15,7 +15,7 @@ public class BlessingModel {
 
   public BlessingModel(Blessing blessing) {
     this.init(new SimpleStringProperty(blessing.getName()),
-      new SimpleStringProperty(String.valueOf(blessing.getGod().getGod())),
+      new SimpleStringProperty(String.valueOf(blessing.getAttribute().getGod())),
       new SimpleStringProperty(blessing.getDescription()),
       new SimpleIntegerProperty(blessing.getLevel()),
       blessing);
@@ -64,8 +64,8 @@ public class BlessingModel {
   }
 
   public void setGod(String god) {
-    this.blessing.setGod(Attribute.valueOf(god));
-    this.god.set(this.blessing.getGod().getGod());
+    this.blessing.setAttribute(Attribute.valueOf(god));
+    this.god.set(this.blessing.getAttribute().getGod());
   }
 
   public String getDesc() {

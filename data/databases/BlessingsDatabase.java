@@ -26,7 +26,7 @@ public class BlessingsDatabase {
   }
 
   public void addBlessing(Blessing blessing) {
-    blessings.get(blessing.getGod()).add(blessing);
+    blessings.get(blessing.getAttribute()).add(blessing);
     this.save(file);
   }
 

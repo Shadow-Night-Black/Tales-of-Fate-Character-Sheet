@@ -70,31 +70,31 @@
     <totem>
         <blessings>
             <description>Add 1d6 to a RES Roll</description>
-            <god>RESISENCE</god>
+            <attribute>RESISENCE</attribute>
             <level>1</level>
             <name>Harden</name>
         </blessings>
         <blessings>
             <description>Add 2 to an adjcent Ally's RES total</description>
-            <god>RESISENCE</god>
+            <attribute>RESISENCE</attribute>
             <level>1</level>
             <name>Guard</name>
         </blessings>
         <blessings>
             <description>Increase your or one adjacent target’s Body by 1d6 + your RES total/2</description>
-            <god>RESISENCE</god>
+            <attribute>RESISENCE</attribute>
             <level>2</level>
             <name>Repair</name>
         </blessings>
         <blessings>
             <description>Elect to be the target of an attack made against one another target. Reduce theresulting damage by your Resilience total/2.</description>
-            <god>RESISENCE</god>
+            <attribute>RESISENCE</attribute>
             <level>2</level>
             <name>Sentry</name>
         </blessings>
         <blessings>
             <description>You and all allies increase your resistance to one physical damage type for theencounter.</description>
-            <god>RESISENCE</god>
+            <attribute>RESISENCE</attribute>
             <level>3</level>
             <name>Resist</name>
         </blessings>

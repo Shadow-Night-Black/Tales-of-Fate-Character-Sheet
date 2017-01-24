@@ -1,6 +1,8 @@
 package data;
 
+import javax.swing.text.NumberFormatter;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.text.NumberFormat;
 
 /**
  * Created by shado on 06/12/2016.
@@ -11,9 +13,11 @@ public class Feat {
   private Attribute attribute;
   private int bonus;
   private boolean active;
+  private Advantage advantages;
+  private boolean advantageMode;
 
   public Feat() {
-    this("Test", "AHHH", Attribute.FINESE, -10, true);
+    this("Test", "AHHH", Attribute.FINESE, -10, false);
   }
 
   public Feat(String name, String desc, Attribute attribute, int bonus, boolean active) {
@@ -21,7 +25,19 @@ public class Feat {
     this.desc = desc;
     this.attribute = attribute;
     this.bonus = bonus;
+    this.advantages = Advantage.NOADVANTAGE;
     this.active = active;
+    this.advantageMode = false;
+  }
+
+  public Feat(String name, String desc, Attribute attribute, Advantage advantages, boolean active) {
+    this.name = name;
+    this.desc = desc;
+    this.attribute = attribute;
+    this.active = active;
+    this.bonus = 0;
+    this.advantages = advantages;
+    this.advantageMode = true;
   }
 
   public Attribute getAttribute() {
@@ -38,6 +54,9 @@ public class Feat {
 
   public void setBonus(int bonus) {
     this.bonus = bonus;
+    if (bonus != 0) {
+      advantageMode = false;
+    }
   }
 
   public boolean isActive() {
@@ -62,5 +81,32 @@ public class Feat {
 
   public void setActive(boolean active) {
     this.active = active;
+  }
+
+  public Advantage getAdvantages() {
+    return advantages;
+  }
+
+  public void setAdvantages(Advantage advantages) {
+    this.advantages = advantages;
+    if (advantages != Advantage.NOADVANTAGE) {
+      this.advantageMode = true;
+    }
+  }
+
+  public String getValue() {
+    if (advantageMode) {
+      return  advantages.toString();
+    }else {
+      return NumberFormat.getIntegerInstance().format(bonus);
+    }
+  }
+
+  public boolean getAdvantageMode() {
+    return advantageMode;
+  }
+
+  public void setAdvantageMode(boolean advantageMode) {
+    this.advantageMode = advantageMode;
   }
 }

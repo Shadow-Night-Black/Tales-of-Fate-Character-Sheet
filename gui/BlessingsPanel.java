@@ -216,7 +216,7 @@ public class BlessingsPanel {
     tblBlessings.getSelectionModel().selectedItemProperty().addListener((observableValue, t1, blessingModel) -> {
       if (blessingModel != null) {
         txtAddName.setText(blessingModel.getName());
-        comboAddGod.getSelectionModel().select(blessingModel.getBlessing().getGod());
+        comboAddGod.getSelectionModel().select(blessingModel.getBlessing().getAttribute());
         txtAddCost.setText(String.valueOf(blessingModel.getCost()));
         txtAddDesc.setText(blessingModel.getDesc());
       }

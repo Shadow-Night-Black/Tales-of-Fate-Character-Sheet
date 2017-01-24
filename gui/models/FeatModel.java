@@ -1,5 +1,6 @@
 package gui.models;
 
+import data.Advantage;
 import data.Attribute;
 import data.Feat;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -13,24 +14,30 @@ public class FeatModel {
   private Feat feat;
   private SimpleIntegerProperty bonus;
   private SimpleStringProperty name, desc, attribute;
-  private SimpleBooleanProperty active;
+  private SimpleBooleanProperty active, advantageMode;
 
   public FeatModel(Feat feat) {
     setFeat(feat);
   }
 
-  public FeatModel(SimpleIntegerProperty bonus, SimpleStringProperty name, SimpleStringProperty desc, SimpleStringProperty attribute, SimpleBooleanProperty active) {
-    Feat feat = new Feat(name.getValue(), desc.getValue(), Attribute.valueOf(attribute.getValue()), bonus.getValue(), active.getValue());
-    init(feat, bonus, name, desc, attribute, active);
+  public FeatModel(SimpleIntegerProperty bonus, SimpleStringProperty name, SimpleStringProperty desc, SimpleStringProperty attribute, SimpleBooleanProperty active, SimpleBooleanProperty advantageMode) {
+    Feat feat;
+    if (advantageMode.get()) {
+      feat = new Feat(name.getValue(), desc.getValue(), Attribute.valueOf(attribute.getValue()), Advantage.fromInt(bonus.get()), active.getValue());
+    }else {
+     feat = new Feat(name.getValue(), desc.getValue(), Attribute.valueOf(attribute.getValue()), bonus.getValue(), active.getValue());
+    }
+    init(feat, bonus, name, desc, attribute, active, advantageMode);
   }
 
-  public void init(Feat form, SimpleIntegerProperty formClass, SimpleStringProperty name, SimpleStringProperty desc, SimpleStringProperty attribute, SimpleBooleanProperty active) {
+  public void init(Feat form, SimpleIntegerProperty bonus, SimpleStringProperty name, SimpleStringProperty desc, SimpleStringProperty attribute, SimpleBooleanProperty active, SimpleBooleanProperty advantageMode) {
     this.feat = form;
     this.name = name;
     this.desc = desc;
     this.attribute = attribute;
-    this.bonus = formClass;
+    this.bonus = bonus;
     this.active = active;
+    this.advantageMode = advantageMode;
   }
 
   public Feat getFeat() {
@@ -38,11 +45,18 @@ public class FeatModel {
   }
 
   public void setFeat(Feat feat) {
-    init(feat, new SimpleIntegerProperty(feat.getBonus()),
+    SimpleIntegerProperty bonus;
+    if (feat.getAdvantageMode()) {
+      bonus = new SimpleIntegerProperty(feat.getAdvantages().toInt());
+    }else {
+      bonus = new SimpleIntegerProperty(feat.getBonus());
+    }
+    init(feat, bonus,
       new SimpleStringProperty(feat.getName()),
       new SimpleStringProperty(feat.getDesc()),
       new SimpleStringProperty(feat.getAttribute().name()),
-      new SimpleBooleanProperty(feat.isActive()));
+      new SimpleBooleanProperty(feat.isActive()),
+      new SimpleBooleanProperty(feat.getAdvantageMode()));
 
   }
 
@@ -56,7 +70,11 @@ public class FeatModel {
 
   public void setBonus(int bonus) {
     this.bonus.set(bonus);
-    this.feat.setBonus(bonus);
+    if (advantageMode.get()) {
+      this.feat.setAdvantages(Advantage.fromInt(bonus));
+    }else {
+      this.feat.setBonus(bonus);
+    }
   }
 
   public String getName() {
@@ -110,5 +128,22 @@ public class FeatModel {
     this.active.set(active);
     this.feat.setActive(active);
   }
+
+  public boolean isAdvantageMode() {
+    return advantageMode.get();
+  }
+
+  public SimpleBooleanProperty advantageModeProperty() {
+    return advantageMode;
+  }
+
+  public void setAdvantageMode(boolean advantageMode) {
+    this.advantageMode.set(advantageMode);
+    this.feat.setAdvantageMode(advantageMode);
+  }
+
+  public SimpleStringProperty valueProperty() {
+   return new SimpleStringProperty(feat.getValue());
+   }
 }
 

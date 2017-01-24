@@ -10,7 +10,7 @@ public class Blessing {
   private String Name;
   private int level;
   private String Description;
-  private Attribute god;
+  private Attribute attribute;
 
   public Blessing() {
     this("Test", Attribute.POWER, 1, "Debug");
@@ -19,15 +19,15 @@ public class Blessing {
     Name = name;
     this.level = level;
     Description = description;
-    this.god = god;
+    this.attribute = god;
   }
 
-  public Attribute getGod() {
-    return god;
+  public Attribute getAttribute() {
+    return attribute;
   }
 
-  public void setGod(Attribute god) {
-    this.god = god;
+  public void setAttribute(Attribute attribute) {
+    this.attribute = attribute;
   }
 
   public String getName() {
