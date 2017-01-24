@@ -49,6 +49,8 @@ public class Feat {
   }
 
   public int getBonus() {
+    if (advantageMode)
+      return 0;
     return bonus;
   }
 
@@ -84,7 +86,9 @@ public class Feat {
   }
 
   public Advantage getAdvantages() {
-    return advantages;
+    if (advantageMode)
+      return advantages;
+    return Advantage.NOADVANTAGE;
   }
 
   public void setAdvantages(Advantage advantages) {
