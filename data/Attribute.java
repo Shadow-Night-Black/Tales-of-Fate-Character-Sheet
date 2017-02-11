@@ -12,6 +12,7 @@ public enum Attribute {
   WITS("Wit", Color.WHITE, "Pherynne", 5, false),
   PRESENCE("Pres", Color.GOLD, "Belia", 6, false);
 
+
   private final String abbrevation;
 
   private final String god;

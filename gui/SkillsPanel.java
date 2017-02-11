@@ -245,12 +245,10 @@ public class SkillsPanel {
 
     Button btnAddSkill = new Button("Add");
     btnAddSkill.setOnAction(actionEvent -> {
-      List<Attribute> attributes = new ArrayList<>();
-      comboAttributes.getCheckModel().getCheckedItems().forEach(attributes::add);
       Skill skill = new Skill(
         txtName.getText(),
         comboLevel.getValue(),
-        attributes);
+        comboAttributes.getCheckModel().getCheckedItems().toArray(new Attribute[6]));
       character.addAbility(skill);
       mainFrame.update(character);
     });

@@ -397,4 +397,12 @@ public class ToFCharacter {
   public void removeAbility(Skill skill) {
     skills.remove(skill);
   }
+
+  public void addFigment(Figment figment) {
+    figments.add(figment);
+  }
+
+  public void removeFigment(Figment figment) {
+    figments.remove(figment);
+  }
 }

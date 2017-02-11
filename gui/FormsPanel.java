@@ -14,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import java.math.BigDecimal;
-import java.util.Objects;
 
 public class FormsPanel {
   private TableView<FormModel> formTable;
@@ -106,9 +105,6 @@ public class FormsPanel {
     NumberSpinner nSMv = new NumberSpinner();
     NumberTextField txtMv = nSMv.getNumberField();
     txtMv.setPromptText("MV");
-    //txtMv.prefWidthProperty().bind(colMv.widthProperty().subtract(nSMv.getIncrementButton().widthProperty()));
-    //txtMv.minWidthProperty().bind(colMv.minWidthProperty().subtract(nSMv.getIncrementButton().minWidthProperty()));
-
     nSMv.prefWidthProperty().bind(colMv.widthProperty());
     nSMv.minWidthProperty().bind(colMv.minWidthProperty());
 

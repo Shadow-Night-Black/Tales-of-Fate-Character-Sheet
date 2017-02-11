@@ -10,7 +10,7 @@ public class Memory {
 
   public Memory(int mv, int cost) {
     setMemorisationValue(mv);
-    this.cost = cost;
+    setCost(cost);
 
   }
 
@@ -19,14 +19,11 @@ public class Memory {
   }
 
   public void setMv(int mv) {
-    this.mv = mv;
+    this.mv = Math.max(mv, 0);
   }
 
   public int getCost() {
-    if (mv > 0)
       return cost;
-    else
-      return 0;
   }
 
   public void setCost(int cost) {
@@ -34,6 +31,6 @@ public class Memory {
   }
 
   public void setMemorisationValue(int mv) {
-    this.mv =36 - 6 * (int)Math.floor(mv/4) + cost;
+    setMv(Math.max(36 - 6 * (int)Math.floor(mv/4) + cost, cost));
   }
 }

@@ -1,5 +1,7 @@
 package data;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Skill {
@@ -8,12 +10,14 @@ public class Skill {
   private List<Attribute> attributes;
 
   public Skill() {
+    this("Test", SkillLevel.AVERAGE);
   }
 
-  public Skill(String name, SkillLevel level, List<Attribute> attributes) {
+  public Skill(String name, SkillLevel level, Attribute... attributes) {
     this.level = level;
     this.name = name;
-    this.attributes = attributes;
+    this.attributes = new ArrayList<>();
+    Collections.addAll(this.attributes, attributes);
   }
 
   public SkillLevel getLevel() {
