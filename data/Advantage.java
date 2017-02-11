@@ -2,11 +2,11 @@ package data;
 
 public enum Advantage {
   EDISADVANTAGE("Extreme Disadvantage", -3),
-  SDISADVANTAGE("S Disadvantage", -2),
+  SDISADVANTAGE("Severe Disadvantage", -2),
   DISADVANTAGE("Disadvantage", -1),
   NOADVANTAGE("No Advantage", 0),
   ADVANTAGE("Advantage", 1),
-  SADVANTAGE("S Advantage", 2),
+  SADVANTAGE("Severe Advantage", 2),
   EADVANTAGE("Extreme Advantage", 3);
 
   private final String toString;
@@ -32,7 +32,15 @@ public enum Advantage {
         return  advantage;
       }
     }
-    System.out.println("Cant convert from " + n);
-    return NOADVANTAGE;
+    if (n < -3) {
+      return EDISADVANTAGE;
+    }else {
+      return EADVANTAGE;
+    }
   }
+
+  public Advantage add(Advantage a) {
+    return fromInt(a.intForm + this.intForm);
+  }
+
 }

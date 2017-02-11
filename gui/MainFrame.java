@@ -28,6 +28,7 @@ public class MainFrame extends Application {
   private static FileChooser fileChooser;
   private static File lastUsed;
   private FormsPanel formsPanel;
+  private SkillsPanel skillsPanel;
 
   public MainFrame() {
     this(new ToFCharacter());
@@ -59,7 +60,8 @@ public class MainFrame extends Application {
     formsPanel = new FormsPanel(this, character);
     Tab forms = new Tab("Forms", formsPanel.getPanel());
 
-    Tab feats = new Tab("Feats/Abilites", createFormsPane());
+    skillsPanel = new SkillsPanel(this, character);
+    Tab skills = new Tab("Skills", skillsPanel.getPanel());
 
     Tab figments = new Tab("Figments", createFigmentPane());
 
@@ -69,7 +71,7 @@ public class MainFrame extends Application {
     notesPanel = new NotesPanel(this, character);
     Tab notes = new Tab("Notes", notesPanel.getPanel());
 
-    mainView.getTabs().addAll(attributes, forms, feats, figments, blessings, notes);
+    mainView.getTabs().addAll(attributes, forms, skills, figments, blessings, notes);
 
     statsPanel = new StatsPanel(this, character);
     root.getChildren().addAll(mainView, statsPanel.getPanel());
@@ -80,9 +82,6 @@ public class MainFrame extends Application {
     return null;
   }
 
-  private Pane createFormsPane() {
-    return null;
-  }
 
   public void update(ToFCharacter character) {
     this.character = character;
@@ -91,6 +90,7 @@ public class MainFrame extends Application {
     attributePanel.update(character);
 
     formsPanel.update(character);
+    skillsPanel.update(character);
     blessingsPanel.update(character);
     notesPanel.update(character);
 

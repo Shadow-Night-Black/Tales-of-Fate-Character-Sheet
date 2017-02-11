@@ -6,23 +6,19 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class FormModel {
   private Form form;
-  private SimpleIntegerProperty formClass;
-  private SimpleStringProperty name, desc;
+  private SimpleIntegerProperty formClass, mv;
+  private SimpleStringProperty name, desc ;
 
   public FormModel(Form form) {
     setForm(form);
   }
 
-  public FormModel(SimpleIntegerProperty formClass, SimpleStringProperty name, SimpleStringProperty desc) {
-    Form form = new Form(name.getValue(), formClass.getValue(), desc.getValue());
-    init(form, formClass, name, desc);
-  }
-
-  private void init(Form form, SimpleIntegerProperty formClass, SimpleStringProperty name, SimpleStringProperty desc) {
+  private void init(Form form, SimpleIntegerProperty formClass, SimpleStringProperty name, SimpleStringProperty desc, SimpleIntegerProperty mv) {
     this.form = form;
     this.formClass = formClass;
     this.name = name;
     this.desc = desc;
+    this.mv = mv;
   }
 
   public Form getForm() {
@@ -32,7 +28,8 @@ public class FormModel {
   public void setForm(Form form) {
     init(form, new SimpleIntegerProperty(form.getFormClass()),
       new SimpleStringProperty(form.getName()),
-      new SimpleStringProperty(form.getDesc()));
+      new SimpleStringProperty(form.getDesc()),
+      new SimpleIntegerProperty(form.getMv()));
   }
 
   public int getFormClass() {
@@ -72,5 +69,17 @@ public class FormModel {
   public void setDesc(String desc) {
     this.desc.set(desc);
     this.form.setDesc(desc);
+  }
+
+  public int getMv() {
+    return mv.get();
+  }
+
+  public SimpleIntegerProperty mvProperty() {
+    return mv;
+  }
+
+  public void setMv(int mv) {
+    this.mv.set(mv);
   }
 }

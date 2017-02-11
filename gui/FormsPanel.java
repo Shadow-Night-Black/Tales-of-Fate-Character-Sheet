@@ -48,10 +48,11 @@ public class FormsPanel {
     formTable = new TableView<>();
 
     TableColumn<FormModel, String> colName = new TableColumn<>("Name");
+    TableColumn<FormModel, Integer> colMv = new TableColumn<>("MV");
     TableColumn<FormModel, Integer> colClass = new TableColumn<>("Class");
     TableColumn<FormModel, String> colDesc = new TableColumn<>("Description");
 
-    formTable.getColumns().addAll(colName, colClass, colDesc);
+    formTable.getColumns().addAll(colName, colMv, colClass, colDesc);
     formTable.setRowFactory(param -> new TableRow<FormModel>() {
       public void updateItem(FormModel model, boolean empty) {
         super.updateItem(model, empty);
@@ -70,9 +71,13 @@ public class FormsPanel {
     HBox inputFields = new HBox();
 
     final int TOTALSIZE = 500;
-    colName.prefWidthProperty().bind(formTable.widthProperty().multiply(150).divide(TOTALSIZE));
-    colName.setMinWidth(150);
+    colName.prefWidthProperty().bind(formTable.widthProperty().multiply(100).divide(TOTALSIZE));
+    colName.setMinWidth(100);
     colName.setCellValueFactory(new PropertyValueFactory<>("name"));
+
+    colMv.prefWidthProperty().bind(formTable.widthProperty().multiply(50).divide(TOTALSIZE));
+    colMv.setMinWidth(50);
+    colMv.setCellValueFactory(new PropertyValueFactory<>("Mv"));
 
     colClass.prefWidthProperty().bind(formTable.widthProperty().multiply(50).divide(TOTALSIZE));
     colClass.setMinWidth(50);
@@ -101,6 +106,12 @@ public class FormsPanel {
     txtName.prefWidthProperty().bind(colName.widthProperty());
     txtName.minWidthProperty().bind(colName.minWidthProperty());
 
+    NumberSpinner nSMv = new NumberSpinner();
+    NumberTextField txtMv = nSMv.getNumberField();
+    txtMv.setPromptText("MV");
+    txtMv.prefWidthProperty().bind(colMv.widthProperty().subtract(nSMv.getIncrementButton().widthProperty()));
+    txtMv.minWidthProperty().bind(colMv.minWidthProperty().subtract(nSMv.getIncrementButton().minWidthProperty()));
+
 
     ComboBox<Integer> comboClass = new ComboBox<>();
     comboClass.setPrefWidth(colClass.getPrefWidth());
@@ -116,7 +127,7 @@ public class FormsPanel {
     txtDesc.prefWidthProperty().bind(colDesc.widthProperty());
     txtDesc.minWidthProperty().bind(colDesc.minWidthProperty());
 
-    inputFields.getChildren().addAll(txtName, comboClass, txtDesc);
+    inputFields.getChildren().addAll(txtName, nSMv, comboClass, txtDesc);
 
     HBox controls = new HBox();
 
@@ -125,7 +136,9 @@ public class FormsPanel {
       character.addForm( new Form(
         txtName.getText(),
         comboClass.getValue(),
-        txtDesc.getText()));
+        txtDesc.getText(),
+        nSMv.getNumber().intValue(),
+        6));
       mainFrame.update(character);
     });
 

@@ -14,19 +14,18 @@ public class BlessingModel {
   private SimpleIntegerProperty cost;
 
   public BlessingModel(Blessing blessing) {
-    this.init(new SimpleStringProperty(blessing.getName()),
+    setBlessing(blessing);
+
+  }
+
+  public void setBlessing(Blessing blessing) {
+   this.init(new SimpleStringProperty(blessing.getName()),
       new SimpleStringProperty(String.valueOf(blessing.getAttribute().getGod())),
       new SimpleStringProperty(blessing.getDescription()),
       new SimpleIntegerProperty(blessing.getLevel()),
       blessing);
   }
 
-  public BlessingModel(SimpleStringProperty name, SimpleStringProperty god, SimpleStringProperty desc, SimpleIntegerProperty cost) {
-    int intCost = cost.getValue();
-    Attribute attribute = Attribute.valueOf(god.getValue());
-    Blessing blessing = new Blessing(name.getValue(), attribute, intCost, desc.getValue());
-    this.init(name, god, desc, cost, blessing);
-  }
 
   private void init(SimpleStringProperty name, SimpleStringProperty god, SimpleStringProperty desc, SimpleIntegerProperty cost, Blessing blessing) {
     this.name = name;

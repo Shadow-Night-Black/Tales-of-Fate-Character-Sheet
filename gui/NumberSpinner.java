@@ -41,6 +41,7 @@ public class NumberSpinner extends HBox {
   private final Button decrementButton;
   private final NumberBinding buttonHeight;
   private final NumberBinding spacing;
+  private VBox buttons;
 
   public NumberSpinner() {
     this(BigDecimal.ZERO, BigDecimal.ONE);
@@ -97,7 +98,7 @@ public class NumberSpinner extends HBox {
     spacing = numberField.heightProperty().subtract(2).subtract(buttonHeight.multiply(2));
 
     // inc/dec buttons
-    VBox buttons = new VBox();
+    buttons = new VBox();
     buttons.setId(BUTTONS_BOX);
     incrementButton = new Button();
     incrementButton.setId(SPINNER_BUTTON_UP);
@@ -180,6 +181,13 @@ public class NumberSpinner extends HBox {
     return  numberField;
   }
 
+  public VBox getButtons() {
+    return buttons;
+  }
+
+  public Button getIncrementButton() {
+    return incrementButton;
+  }
   // debugging layout bounds
   public void dumpSizes() {
     System.out.println("numberField (layout)=" + numberField.getLayoutBounds());

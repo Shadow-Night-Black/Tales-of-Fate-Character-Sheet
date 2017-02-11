@@ -9,16 +9,17 @@ import java.util.List;
  * Created by shado on 06/12/2016.
  */
 @XmlRootElement(name = "Form")
-public class Form {
+public class Form extends Memory{
   private String name, desc;
   private int formClass;
   private List<Feat> feats;
 
   public Form() {
-    this("You", 3, "Your normal everyday body");
+    this("You", 3, "Your normal everyday body", 0, 6);
   }
 
-  public Form(String name, int formClass, String desc, Feat... feats) {
+  public Form(String name, int formClass, String desc, int mv, int cost,  Feat... feats) {
+    super(mv, cost);
     this.name = name;
     this.desc = desc;
     this.formClass = formClass;

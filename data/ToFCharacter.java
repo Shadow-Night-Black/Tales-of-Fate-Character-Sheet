@@ -6,7 +6,6 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
 import java.util.ArrayList;
@@ -20,7 +19,7 @@ public class ToFCharacter {
   private Map<Attribute, Integer> attributes;
   private List<Form> forms;
   private Form currentForm;
-  private List<Feat> abilities;
+  private List<Skill> skills;
   private List<Figment> figments;
   private Totem totem;
   private String name, bio;
@@ -37,7 +36,7 @@ public class ToFCharacter {
     }
 
     forms = new ArrayList<>();
-    abilities = new ArrayList<>();
+    skills = new ArrayList<>();
     figments = new ArrayList<>();
     this.currentForm = new Form();
     forms.add(currentForm);
@@ -162,12 +161,12 @@ public class ToFCharacter {
   }
 
 
-  public List<Feat> getAbilities() {
-    return abilities;
+  public List<Skill> getSkills() {
+    return skills;
   }
 
-  public void setAbilities(List<Feat> abilities) {
-    this.abilities = abilities;
+  public void setSkills(List<Skill> skills) {
+    this.skills = skills;
   }
 
   public List<Figment> getFigments() {
@@ -276,7 +275,7 @@ public class ToFCharacter {
   }
 
   public int getBaseDC() {
-    int dc = 1;
+    int dc = 0;
     for (Attribute attribute: Attribute.values()) {
       if (attribute.isPhysical()){
         dc += Attribute.getModifier(this.getBaseAttribute(attribute));
@@ -286,7 +285,7 @@ public class ToFCharacter {
   }
 
   public int getBaseMC() {
-    int mc = 1;
+    int mc = 0;
     for (Attribute attribute: Attribute.values()) {
       if (attribute.isMental()){
         mc += Attribute.getModifier(this.getBaseAttribute(attribute));
@@ -296,7 +295,7 @@ public class ToFCharacter {
   }
 
   public int getCurrentDC() {
-    int dc = 1;
+    int dc = 0;
     for (Attribute attribute: Attribute.values()) {
       if (attribute.isPhysical()){
         dc += Attribute.getModifier(this.getModifiedAttribute(attribute));
@@ -306,7 +305,7 @@ public class ToFCharacter {
   }
 
   public int getCurrentMC() {
-    int mc = 1;
+    int mc = 0;
     for (Attribute attribute: Attribute.values()) {
       if (attribute.isMental()){
         mc += Attribute.getModifier(this.getModifiedAttribute(attribute));
@@ -389,5 +388,13 @@ public class ToFCharacter {
     }else {
       this.currentInit = baseInit;
     }
+  }
+
+  public void addAbility(Skill skill) {
+    skills.add(skill);
+  }
+
+  public void removeAbility(Skill skill) {
+    skills.remove(skill);
   }
 }
