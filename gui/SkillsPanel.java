@@ -16,9 +16,6 @@ import org.controlsfx.control.CheckComboBox;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by shado on 11/02/2017.
- */
 public class SkillsPanel {
 
   private TableView<FeatModel> profsTable;

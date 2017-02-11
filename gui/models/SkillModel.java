@@ -10,9 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * Created by shado on 11/02/2017.
- */
 public class SkillModel {
   private SimpleStringProperty name, level, attributes;
   private Skill skill;

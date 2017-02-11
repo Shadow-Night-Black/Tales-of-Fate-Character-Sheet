@@ -109,9 +109,11 @@ public class FormsPanel {
     NumberSpinner nSMv = new NumberSpinner();
     NumberTextField txtMv = nSMv.getNumberField();
     txtMv.setPromptText("MV");
-    txtMv.prefWidthProperty().bind(colMv.widthProperty().subtract(nSMv.getIncrementButton().widthProperty()));
-    txtMv.minWidthProperty().bind(colMv.minWidthProperty().subtract(nSMv.getIncrementButton().minWidthProperty()));
+    //txtMv.prefWidthProperty().bind(colMv.widthProperty().subtract(nSMv.getIncrementButton().widthProperty()));
+    //txtMv.minWidthProperty().bind(colMv.minWidthProperty().subtract(nSMv.getIncrementButton().minWidthProperty()));
 
+    nSMv.prefWidthProperty().bind(colMv.widthProperty());
+    nSMv.minWidthProperty().bind(colMv.minWidthProperty());
 
     ComboBox<Integer> comboClass = new ComboBox<>();
     comboClass.setPrefWidth(colClass.getPrefWidth());
@@ -149,6 +151,7 @@ public class FormsPanel {
         model.setName(txtName.getText());
         model.setFormClass(comboClass.getValue());
         model.setDesc(txtDesc.getText());
+        model.setMv(nSMv.getNumber().intValue());
         mainFrame.update(character);
       }
     });
@@ -179,6 +182,7 @@ public class FormsPanel {
         txtName.setText(formModel.getName());
         comboClass.getSelectionModel().select(formModel.getFormClass()-1);
         txtDesc.setText(formModel.getDesc());
+        txtMv.setText(String.valueOf(formModel.getMv()));
       }
     });
 

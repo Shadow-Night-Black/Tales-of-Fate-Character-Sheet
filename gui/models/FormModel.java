@@ -81,5 +81,6 @@ public class FormModel {
 
   public void setMv(int mv) {
     this.mv.set(mv);
+    this.form.setMv(mv);
   }
 }

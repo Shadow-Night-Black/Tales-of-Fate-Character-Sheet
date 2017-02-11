@@ -12,7 +12,7 @@ public class Memory {
   }
 
   public Memory(int mv, int cost) {
-    this.mv = mv;
+    setMemorisationValue(mv);
     this.cost = cost;
 
   }
@@ -34,5 +34,9 @@ public class Memory {
 
   public void setCost(int cost) {
     this.cost = cost;
+  }
+
+  public void setMemorisationValue(int mv) {
+    this.mv =36 - 6 * (int)Math.floor(mv/4) + cost;
   }
 }
