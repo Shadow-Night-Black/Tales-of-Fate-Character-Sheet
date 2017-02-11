@@ -11,14 +11,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
-/**
- * Created by AQU-mark on 22/12/16.
- */
 public class FormsPanel {
   private TableView<FormModel> formTable;
   private  TableView<FeatModel> featTable;
@@ -57,7 +54,7 @@ public class FormsPanel {
       public void updateItem(FormModel model, boolean empty) {
         super.updateItem(model, empty);
         if (model != null && !empty) {
-          if (model.getName() == character.getCurrentForm().getName()) {
+          if (model.getName().equals(character.getCurrentForm().getName())) {
             setStyle("-fx-control-inner-background: green");
           } else {
             setStyle("");

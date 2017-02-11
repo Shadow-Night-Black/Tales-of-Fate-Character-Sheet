@@ -1,12 +1,8 @@
 package data;
 
-import javax.swing.text.NumberFormatter;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.text.NumberFormat;
 
-/**
- * Created by shado on 06/12/2016.
- */
 @XmlRootElement(name = "Feat/Ability")
 public class Feat {
   private String name, desc;

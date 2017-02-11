@@ -7,9 +7,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-/**
- * Created by shado on 22/01/2017.
- */
 public class FeatModel {
   private Feat feat;
   private SimpleIntegerProperty bonus;

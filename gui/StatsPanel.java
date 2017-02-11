@@ -13,9 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Created by shado on 10/12/2016.
- */
 public class StatsPanel {
 
   private Label lblBaseBody;

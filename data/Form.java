@@ -2,12 +2,9 @@ package data;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by shado on 06/12/2016.
- */
 @XmlRootElement(name = "Form")
 public class Form extends Memory{
   private String name, desc;
@@ -24,9 +21,7 @@ public class Form extends Memory{
     this.desc = desc;
     this.formClass = formClass;
     this.feats = new ArrayList<>();
-    for (Feat feat: feats) {
-      this.feats.add(feat);
-    }
+    Collections.addAll(this.feats, feats);
   }
 
   public int getFormClass() {

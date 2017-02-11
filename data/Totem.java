@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-/**
- * Created by shado on 06/12/2016.
- */
 @XmlRootElement(name = "Totem")
 public class Totem {
   private static final int STARTING_BLESSING_COUNT = 6;

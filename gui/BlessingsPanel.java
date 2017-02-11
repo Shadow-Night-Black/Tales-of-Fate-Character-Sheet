@@ -46,6 +46,7 @@ public class BlessingsPanel {
       modifier.setPrefColumnCount(3);
       totemMods.put(a, modifier);
 
+      //TODO: Switch this over to NumberSpinner
       modifier.textProperty().addListener(
               (observable, oldValue, newValue) -> {
                 if (!newValue.matches("^[+\\-]?\\d*$")) {
@@ -76,10 +77,10 @@ public class BlessingsPanel {
 
     tblBlessings = new TableView<>();
 
-    TableColumn<BlessingModel, String> colName = new TableColumn("Name");
-    TableColumn<BlessingModel, String> colGod = new TableColumn("God");
-    TableColumn<BlessingModel, Integer> colCost = new TableColumn("Cost");
-    TableColumn<BlessingModel, String> colDesc = new TableColumn("Description");
+    TableColumn<BlessingModel, String> colName = new TableColumn<>("Name");
+    TableColumn<BlessingModel, String> colGod = new TableColumn<>("God");
+    TableColumn<BlessingModel, Integer> colCost = new TableColumn<>("Cost");
+    TableColumn<BlessingModel, String> colDesc = new TableColumn<>("Description");
     tblBlessings.getColumns().addAll(colName, colGod, colCost, colDesc);
 
 

@@ -8,9 +8,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
 
-/**
- * Created by shado on 10/12/2016.
- */
 public class NotesPanel {
 
 

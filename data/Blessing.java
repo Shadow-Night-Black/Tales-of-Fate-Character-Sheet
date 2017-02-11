@@ -2,9 +2,6 @@ package data;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-/**
- * Created by shado on 06/12/2016.
- */
 @XmlRootElement(name = "Blessing")
 public class Blessing {
   private String Name;

@@ -4,7 +4,6 @@ import data.Attribute;
 import data.Skill;
 import data.SkillLevel;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +82,7 @@ public class SkillModel {
     if (attributes.size() > 0) {
       StringBuilder s = new StringBuilder();
       for (Attribute attribute : skill.getAttributes()) {
-        s.append(attribute.toString() + ", ");
+        s.append(attribute.toString()).append(", ");
       }
       s.deleteCharAt(s.length() - 1);
       s.deleteCharAt(s.length() - 1);

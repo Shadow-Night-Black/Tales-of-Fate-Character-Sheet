@@ -5,5 +5,5 @@ public enum SkillLevel {
   ADEPT,
   SKILLED,
   SUPERIOR,
-  AVERAGE;
+  AVERAGE
 }

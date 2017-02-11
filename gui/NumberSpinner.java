@@ -181,13 +181,6 @@ public class NumberSpinner extends HBox {
     return  numberField;
   }
 
-  public VBox getButtons() {
-    return buttons;
-  }
-
-  public Button getIncrementButton() {
-    return incrementButton;
-  }
   // debugging layout bounds
   public void dumpSizes() {
     System.out.println("numberField (layout)=" + numberField.getLayoutBounds());

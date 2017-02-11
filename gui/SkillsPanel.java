@@ -245,8 +245,8 @@ public class SkillsPanel {
 
     Button btnAddSkill = new Button("Add");
     btnAddSkill.setOnAction(actionEvent -> {
-      List<Attribute> attributes = new ArrayList<Attribute>();
-      comboAttributes.getCheckModel().getCheckedItems().forEach(attribute -> attributes.add(attribute));
+      List<Attribute> attributes = new ArrayList<>();
+      comboAttributes.getCheckModel().getCheckedItems().forEach(attributes::add);
       Skill skill = new Skill(
         txtName.getText(),
         comboLevel.getValue(),
@@ -258,8 +258,8 @@ public class SkillsPanel {
     Button btnEditSkill= new Button("Edit");
     btnEditSkill.setOnAction(actionEvent -> {
       SkillModel model = skillTable.getSelectionModel().getSelectedItem();
-      List<Attribute> attributes = new ArrayList<Attribute>();
-      comboAttributes.getCheckModel().getCheckedItems().forEach(attribute -> attributes.add(attribute));
+      List<Attribute> attributes = new ArrayList<>();
+      comboAttributes.getCheckModel().getCheckedItems().forEach(attributes::add);
       if (model != null) {
         model.setName(txtName.getText());
         model.setLevel(comboLevel.getValue().toString());

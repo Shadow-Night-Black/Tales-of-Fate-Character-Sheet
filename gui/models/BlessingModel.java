@@ -5,9 +5,6 @@ import data.Blessing;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-/**
- * Created by shado on 22/01/2017.
- */
 public class BlessingModel {
   private Blessing blessing;
   private SimpleStringProperty name, god, desc;

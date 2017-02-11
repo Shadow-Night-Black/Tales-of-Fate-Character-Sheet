@@ -2,9 +2,6 @@ package data;
 
 import java.util.List;
 
-/**
- * Created by shado on 11/02/2017.
- */
 public class Skill {
   private SkillLevel level;
   private String name;
