@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 @XmlRootElement(name = "Form")
-public class Form extends Memory{
+public class Form extends Memory implements Comparable<Form>{
   private String name, desc;
   private int formClass;
   private List<Feat> feats;
@@ -80,5 +80,13 @@ public class Form extends Memory{
       return false;
     Form form = (Form) obj;
     return form.getName().equals(name);
+  }
+
+  @Override
+  public int compareTo(Form o) {
+    if (o.getFormClass() == this.getFormClass()) {
+      return this.getName().compareTo(o.getName());
+    }
+    else return this.getFormClass() - o.getFormClass();
   }
 }

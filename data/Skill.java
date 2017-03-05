@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Skill {
+public class Skill implements Comparable<Skill>{
   private SkillLevel level;
   private String name;
   private List<Attribute> attributes;
@@ -46,5 +46,10 @@ public class Skill {
 
   public String toString() {
     return this.name + " " + this.level + " " + this.attributes.toString();
+  }
+
+  @Override
+  public int compareTo(Skill o) {
+    return this.getName().compareTo(o.getName());
   }
 }

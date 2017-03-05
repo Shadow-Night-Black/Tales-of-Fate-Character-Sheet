@@ -166,13 +166,15 @@ public class StatsPanel {
     btnMaxFateRecovery.setOnAction(event -> {
       Optional<Integer> result = createSinglePrompt("Recover Max Fate", "How much Max Fate do you regain?", "");
       if (result.isPresent()) {
-        toFCharacter.setFateDamage(toFCharacter.getFateDamage() - result.get());
+        int amount = result.get();
+        toFCharacter.setCurrentFate(toFCharacter.getCurrentFate() + amount);
+        toFCharacter.setFateDamage(toFCharacter.getFateDamage() - amount);
         mainFrame.update(toFCharacter);
       }
     });
     btnMaxFateDamage.setOnAction(event -> {
-      toFCharacter.setFateDamage(toFCharacter.getFateDamage()+1);
       toFCharacter.setCurrentFate(toFCharacter.getCurrentFate() - 1);
+      toFCharacter.setFateDamage(toFCharacter.getFateDamage()+1);
       mainFrame.update(toFCharacter);
     });
     gridPoints.add(btnMaxFateRecovery, 8, 1);

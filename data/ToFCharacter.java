@@ -2,25 +2,24 @@ package data;
 
 
 
+import javafx.collections.transformation.SortedList;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 
 @XmlRootElement(name = "Character")
 public class ToFCharacter {
   private Map<Attribute, Integer> attributes;
-  private List<Form> forms;
+  private Collection<Form> forms;
   private Form currentForm;
-  private List<Skill> skills;
-  private List<Figment> figments;
+  private Collection<Skill> skills;
+  private Collection<Figment> figments;
   private Totem totem;
   private String name, bio;
   private int fateDamage, currentFate;
@@ -35,9 +34,9 @@ public class ToFCharacter {
       attributes.put(attribute, 6);
     }
 
-    forms = new ArrayList<>();
-    skills = new ArrayList<>();
-    figments = new ArrayList<>();
+    forms = new TreeSet<>();
+    skills = new TreeSet<>();
+    figments = new TreeSet<>();
     this.currentForm = new Form();
     forms.add(currentForm);
     this.totem = new Totem();
@@ -65,7 +64,6 @@ public class ToFCharacter {
   }
 
   public void setAttribute(Attribute attribute, int value) {
-    System.out.println("Changing " + attribute + " from " + this.attributes.get(attribute) + " to " + value);
     int difference = value - this.attributes.get(attribute);
     List<Integer> segments;
     if (attribute.isPhysical()) {
@@ -151,29 +149,29 @@ public class ToFCharacter {
     this.attributes = attributes;
   }
 
-  public List<Form> getForms() {
+  public Collection<Form> getForms() {
     return forms;
   }
 
   @Deprecated
-  public void setForms(List<Form> forms) {
+  public void setForms(Collection<Form> forms) {
     throw new RuntimeException("Don't use SetForms()");
   }
 
 
-  public List<Skill> getSkills() {
+  public Collection<Skill> getSkills() {
     return skills;
   }
 
-  public void setSkills(List<Skill> skills) {
+  public void setSkills(Collection<Skill> skills) {
     this.skills = skills;
   }
 
-  public List<Figment> getFigments() {
+  public Collection<Figment> getFigments() {
     return figments;
   }
 
-  public void setFigments(List<Figment> figments) {
+  public void setFigments(Collection<Figment> figments) {
     this.figments = figments;
   }
 
@@ -327,14 +325,11 @@ public class ToFCharacter {
   }
 
   public int getCurrentFate() {
-    return currentFate;
+    return Math.min(currentFate, getBaseFate());
   }
 
   public void setCurrentFate(int currentFate) {
-    if (currentFate < this.getBaseFate())
       this.currentFate = currentFate;
-    else
-      this.currentFate = this.getBaseFate();
   }
 
   public Form getCurrentForm() {

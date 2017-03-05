@@ -9,8 +9,8 @@ public class Memory {
   }
 
   public Memory(int mv, int cost) {
-    setMemorisationValue(mv);
     setCost(cost);
+    setMemorisationValue(mv);
 
   }
 

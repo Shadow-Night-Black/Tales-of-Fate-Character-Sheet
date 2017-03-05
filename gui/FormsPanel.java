@@ -361,7 +361,6 @@ public class FormsPanel {
         txtName.setText(featModel.getName());
         txtDesc.setText(featModel.getDesc());
         txtBonus.setNumber(new BigDecimal(featModel.getBonus()));
-        System.out.println(featModel.getBonus());
         comboAdvantages.getSelectionModel().select(Advantage.fromInt(featModel.getBonus()));
         comboAttributes.getSelectionModel().select(Attribute.valueOf(featModel.getAttribute()));
         if (featModel.isAdvantageMode() != advantageMode) {

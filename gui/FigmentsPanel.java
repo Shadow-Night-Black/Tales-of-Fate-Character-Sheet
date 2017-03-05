@@ -6,9 +6,7 @@ package gui;
 
 
 import data.*;
-import gui.models.FeatModel;
 import gui.models.FigmentModel;
-import gui.models.FormModel;
 import gui.models.ItemModel;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -18,6 +16,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.Text;
 
 import java.math.BigDecimal;
@@ -25,7 +25,7 @@ import java.math.BigDecimal;
 public class FigmentsPanel {
   private TableView<ItemModel> inventory;
   private TableView<FigmentModel> figmentEditor;
-  private ItemModel selected;
+  private Figment selected;
   private final GridPane mainGrid;
   private boolean advantageMode;
 
@@ -49,6 +49,7 @@ public class FigmentsPanel {
     VBox invBox = new VBox();
 
     inventory = new TableView<>();
+    inventory.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
     TableColumn<ItemModel, String> colName = new TableColumn<>("Name");
     TableColumn<ItemModel, Integer> colMv = new TableColumn<>("MV");
@@ -73,17 +74,17 @@ public class FigmentsPanel {
 
     HBox inputFields = new HBox();
 
-    final int TOTALSIZE = 500;
+    final int TOTALSIZE = 550;
     colName.prefWidthProperty().bind(inventory.widthProperty().multiply(100).divide(TOTALSIZE));
     colName.setMinWidth(100);
     colName.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-    colMv.prefWidthProperty().bind(inventory.widthProperty().multiply(50).divide(TOTALSIZE));
-    colMv.setMinWidth(50);
+    colMv.prefWidthProperty().bind(inventory.widthProperty().multiply(75).divide(TOTALSIZE));
+    colMv.setMinWidth(75);
     colMv.setCellValueFactory(new PropertyValueFactory<>("Mv"));
 
-    colCost.prefWidthProperty().bind(inventory.widthProperty().multiply(50).divide(TOTALSIZE));
-    colCost.setMinWidth(50);
+    colCost.prefWidthProperty().bind(inventory.widthProperty().multiply(75).divide(TOTALSIZE));
+    colCost.setMinWidth(75);
     colCost.setCellValueFactory(new PropertyValueFactory<>("cost"));
 
     colDesc.prefWidthProperty().bind(inventory.widthProperty().multiply(300).divide(TOTALSIZE));
@@ -102,7 +103,7 @@ public class FigmentsPanel {
     for (Figment figment: character.getFigments()) {
       ItemModel model = new ItemModel(figment);
       inventory.getItems().add(model);
-      selected = model;
+      selected = figment;
     }
 
     TextField txtName = new TextField();
@@ -117,7 +118,7 @@ public class FigmentsPanel {
     nsMv.minWidthProperty().bind(colMv.minWidthProperty());
 
     NumberSpinner nsCost = new NumberSpinner();
-    NumberTextField txtCost = nsMv.getNumberField();
+    NumberTextField txtCost = nsCost.getNumberField();
     txtCost.setPromptText("Cost");
     nsCost.prefWidthProperty().bind(colCost.widthProperty());
     nsCost.minWidthProperty().bind(colCost.minWidthProperty());
@@ -157,32 +158,32 @@ public class FigmentsPanel {
     Button btnRemoveForm = new Button("Delete");
 
     btnRemoveForm.setOnAction(actionEvent -> {
-      ItemModel model = inventory.getSelectionModel().getSelectedItem();
-      if (model != null) {
+      for (ItemModel model: inventory.getSelectionModel().getSelectedItems()) {
         Figment figment = model.getFigment();
         character.removeFigment(figment);
-        mainFrame.update(character);
       }
+      mainFrame.update(character);
     });
 
-    Button btnSetForm = new Button("(Un)Equip Selected Item");
+    Button btnSetForm = new Button("(Un)Equip Selected Item(s)");
 
     btnSetForm.setOnAction(event -> {
-      ItemModel model = inventory.getSelectionModel().getSelectedItem();
-      if (model != null) {
+      for (ItemModel model: inventory.getSelectionModel().getSelectedItems()) {
         Figment figment = model.getFigment();
         figment.setEquipped(!figment.isEquipped());
-        mainFrame.update(character);
       }
+      mainFrame.update(character);
     });
 
     inventory.getSelectionModel().selectedItemProperty().addListener((observableValue, t1, itemModel) -> {
       if (itemModel != null) {
-        selected = itemModel;
-        txtName.setText(itemModel.getName());
-        txtDesc.setText(itemModel.getDesc());
-        txtMv.setText(String.valueOf(itemModel.getMv()));
-        txtCost.setText(String.valueOf(itemModel.getCost()));
+        Figment figment = itemModel.getFigment();
+        selected = figment;
+        txtName.setText(figment.getName());
+        txtDesc.setText(figment.getDesc());
+        txtMv.setText(String.valueOf(figment.getMv()));
+        txtCost.setText(String.valueOf(figment.getCost()));
+        this.updateFigmentTable();
       }
     });
 
@@ -230,7 +231,8 @@ public class FigmentsPanel {
     });
 
     if (this.selected != null) {
-      for (FigmentModel model : this.selected.getFigmentModels()) {
+      for (Feat feat : this.selected.getFeatBonuses()){
+        FigmentModel model = new FigmentModel(feat, selected);
         figmentEditor.getItems().add(model);
       }
     }
@@ -268,14 +270,14 @@ public class FigmentsPanel {
     Button btnAddForm = new Button("Add");
     btnAddForm.setOnAction(actionEvent -> {
       if (advantageMode) {
-        selected.getFigment().addFeatBonus(new Feat(
+        selected.addFeatBonus(new Feat(
           txtType.getText(),
           txtDesc.getText(),
           Attribute.POWER, //NEVER USED
           comboAdvantages.getValue(),
           true));
       }else {
-        selected.getFigment().addFeatBonus(new Feat(
+        selected.addFeatBonus(new Feat(
           txtType.getText(),
           txtDesc.getText(),
           Attribute.POWER, //NEVER USED
@@ -362,14 +364,17 @@ public class FigmentsPanel {
     for (Figment figment: character.getFigments()) {
       ItemModel model = new ItemModel(figment);
       inventory.getItems().add(model);
-      selected = model;
     }
 
+    updateFigmentTable();
+  }
+
+  private void updateFigmentTable() {
     figmentEditor.setStyle("");
     figmentEditor.getItems().clear();
     if (selected != null) {
-      for (FigmentModel model : selected.getFigmentModels()) {
-        figmentEditor.getItems().add(model);
+      for (Feat feat: selected.getFeatBonuses()) {
+        figmentEditor.getItems().add(new FigmentModel(feat, selected));
       }
     }
   }

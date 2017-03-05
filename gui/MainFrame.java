@@ -101,15 +101,14 @@ public class MainFrame extends Application {
   private void setupMenuBar(VBox root) {
     MenuBar menuBar = new MenuBar();
     Menu menuFile = new Menu("File");
-    Menu menuEdit = new Menu("Edit");
 
 
     MenuItem newCharacter = new MenuItem("New");
     newCharacter.setOnAction((event -> this.newWindow(new ToFCharacter())));
 
 
-    MenuItem saveCharacter = new MenuItem("Save");
-    saveCharacter.setOnAction((event) -> {
+    MenuItem saveAsCharacter = new MenuItem("Save As");
+    saveAsCharacter.setOnAction((event) -> {
       FileChooser fileChooser = getFileChooser();
       File f = fileChooser.showSaveDialog(stage);
       if (f != null) {
@@ -120,8 +119,17 @@ public class MainFrame extends Application {
         System.out.println("Saved " + f.getPath());
       }
     });
-    saveCharacter.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
 
+    MenuItem saveCharacter = new MenuItem("Save ");
+    saveCharacter.setOnAction(event -> {
+      if (lastUsed != null) {
+        this.character.save(lastUsed);
+      }else {
+        saveAsCharacter.fire();
+      }
+    });
+
+    saveCharacter.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.CONTROL_DOWN));
     MenuItem loadCharacter = new MenuItem("Load");
     loadCharacter.setOnAction((event) -> {
       FileChooser fileChooser = getFileChooser();
@@ -138,9 +146,9 @@ public class MainFrame extends Application {
     MenuItem exit = new MenuItem("Exit");
     exit.setOnAction((event) -> System.exit(0));
 
-    menuFile.getItems().addAll(newCharacter, loadCharacter, saveCharacter, exit);
+    menuFile.getItems().addAll(newCharacter, loadCharacter, saveCharacter, saveAsCharacter, exit);
 
-    menuBar.getMenus().addAll(menuFile, menuEdit);
+    menuBar.getMenus().addAll(menuFile);
 
     root.getChildren().addAll(menuBar);
   }

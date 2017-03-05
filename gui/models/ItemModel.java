@@ -11,14 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemModel {
-  private List<FigmentModel> figmentModels;
   private SimpleStringProperty name, desc;
   private SimpleIntegerProperty cost, mv;
   private SimpleBooleanProperty equipped;
   private Figment figment;
 
   public ItemModel(Figment figment) {
-    figmentModels = new ArrayList<>();
     this.name = new SimpleStringProperty();
     this.desc = new SimpleStringProperty();
     this.cost = new SimpleIntegerProperty();
@@ -89,18 +87,7 @@ public class ItemModel {
 
   public void setEquipped(boolean equipped) {
     this.equipped.set(equipped);
-  }
-
-  public List<FigmentModel> getFigmentModels() {
-    return figmentModels;
-  }
-
-  public void addFigmentModel(FigmentModel model) {
-    this.figmentModels.add(model);
-  }
-
-  public void removeFigmentModel(FigmentModel model) {
-    this.figmentModels.remove(model);
+    figment.setEquipped(equipped);
   }
 
   public Figment getFigment() {
@@ -114,11 +101,5 @@ public class ItemModel {
     this.cost.set(figment.getCost());
     this.mv.set(figment.getMv());
     this.equipped.set(figment.isEquipped());
-    for (Skill skill: figment.getSkillBonuses()) {
-    //  figmentModels.add(new FigmentModel(skill));
-    }
-    for (Feat feat: figment.getFeatBonuses()){
-      figmentModels.add(new FigmentModel(feat, figment, this));
-    }
   }
 }

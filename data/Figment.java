@@ -4,7 +4,7 @@ package data;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Figment extends Memory {
+public class Figment extends Memory implements Comparable<Figment>{
   private String name, desc;
   private List<Skill> skillBonuses;
   private List<Feat> featBonuses;
@@ -77,5 +77,15 @@ public class Figment extends Memory {
 
   public void setEquipped(boolean equipped) {
     this.equipped = equipped;
+  }
+
+  @Override
+  public int compareTo(Figment o) {
+    int result = this.getName().compareTo(o.getName());
+    if (result == 0) {
+      result = this.getDesc().compareTo(o.getDesc());
+    }
+
+    return result;
   }
 }

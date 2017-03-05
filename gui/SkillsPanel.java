@@ -248,7 +248,7 @@ public class SkillsPanel {
       Skill skill = new Skill(
         txtName.getText(),
         comboLevel.getValue(),
-        comboAttributes.getCheckModel().getCheckedItems().toArray(new Attribute[6]));
+        comboAttributes.getCheckModel().getCheckedItems().toArray(new Attribute[comboAttributes.getCheckModel().getCheckedItems().size()]));
       character.addAbility(skill);
       mainFrame.update(character);
     });
