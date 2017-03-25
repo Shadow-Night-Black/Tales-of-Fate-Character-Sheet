@@ -16,11 +16,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.FontSmoothingType;
 import javafx.scene.text.Text;
 
-import java.math.BigDecimal;
 
 public class FigmentsPanel {
   private TableView<ItemModel> inventory;
@@ -28,6 +25,7 @@ public class FigmentsPanel {
   private Figment selected;
   private final GridPane mainGrid;
   private boolean advantageMode;
+  private Label slotsOpen;
 
   public FigmentsPanel(MainFrame mainFrame, ToFCharacter character) {
     mainGrid = MainFrame.getGridPane();
@@ -49,6 +47,7 @@ public class FigmentsPanel {
     VBox invBox = new VBox();
 
     inventory = new TableView<>();
+    inventory.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     inventory.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
     TableColumn<ItemModel, String> colName = new TableColumn<>("Name");
@@ -74,20 +73,20 @@ public class FigmentsPanel {
 
     HBox inputFields = new HBox();
 
-    final int TOTALSIZE = 550;
-    colName.prefWidthProperty().bind(inventory.widthProperty().multiply(100).divide(TOTALSIZE));
+    final int TOTAL_SIZE = 550;
+    colName.prefWidthProperty().bind(inventory.widthProperty().multiply(100).divide(TOTAL_SIZE));
     colName.setMinWidth(100);
     colName.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-    colMv.prefWidthProperty().bind(inventory.widthProperty().multiply(75).divide(TOTALSIZE));
+    colMv.prefWidthProperty().bind(inventory.widthProperty().multiply(75).divide(TOTAL_SIZE));
     colMv.setMinWidth(75);
     colMv.setCellValueFactory(new PropertyValueFactory<>("Mv"));
 
-    colCost.prefWidthProperty().bind(inventory.widthProperty().multiply(75).divide(TOTALSIZE));
+    colCost.prefWidthProperty().bind(inventory.widthProperty().multiply(75).divide(TOTAL_SIZE));
     colCost.setMinWidth(75);
     colCost.setCellValueFactory(new PropertyValueFactory<>("cost"));
 
-    colDesc.prefWidthProperty().bind(inventory.widthProperty().multiply(300).divide(TOTALSIZE));
+    colDesc.prefWidthProperty().bind(inventory.widthProperty().multiply(300).divide(TOTAL_SIZE));
     colDesc.setMinWidth(300);
     colDesc.setCellValueFactory(new PropertyValueFactory<>("desc"));
     colDesc.setCellFactory(param -> {
@@ -111,15 +110,19 @@ public class FigmentsPanel {
     txtName.prefWidthProperty().bind(colName.widthProperty());
     txtName.minWidthProperty().bind(colName.minWidthProperty());
 
-    NumberSpinner nsMv = new NumberSpinner();
-    NumberTextField txtMv = nsMv.getNumberField();
-    txtMv.setPromptText("MV");
+    SpinnerAutoCommit<Integer> nsMv = new SpinnerAutoCommit<Integer>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 99));
+    nsMv.setEditable(true);
+    //NumberSpinner nsMv = new NumberSpinner();
+    //NumberTextField txtMv = nsMv.getNumberField();
+    nsMv.getEditor().setPromptText("MV");
     nsMv.prefWidthProperty().bind(colMv.widthProperty());
     nsMv.minWidthProperty().bind(colMv.minWidthProperty());
 
-    NumberSpinner nsCost = new NumberSpinner();
-    NumberTextField txtCost = nsCost.getNumberField();
-    txtCost.setPromptText("Cost");
+    SpinnerAutoCommit<Integer> nsCost = new SpinnerAutoCommit<Integer>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 99));
+    nsCost.setEditable(true);
+    //NumberSpinner nsCost = new NumberSpinner();
+    //NumberTextField txtCost = nsCost.getNumberField();
+    nsCost.getEditor().setPromptText("Cost");
     nsCost.prefWidthProperty().bind(colCost.widthProperty());
     nsCost.minWidthProperty().bind(colCost.minWidthProperty());
 
@@ -137,8 +140,8 @@ public class FigmentsPanel {
       character.addFigment( new Figment(
         txtName.getText(),
         txtDesc.getText(),
-        nsMv.getNumber().intValue(),
-        nsCost.getNumber().intValue(),
+        nsMv.getValue(),
+        nsCost.getValue(),
         true));
       mainFrame.update(character);
     });
@@ -149,8 +152,8 @@ public class FigmentsPanel {
       if (model != null) {
         model.setName(txtName.getText());
         model.setDesc(txtDesc.getText());
-        model.setMv(nsMv.getNumber().intValue());
-        model.setCost(nsCost.getNumber().intValue());
+        model.setMv(nsMv.getValue());
+        model.setCost(nsCost.getValue());
         mainFrame.update(character);
       }
     });
@@ -181,8 +184,8 @@ public class FigmentsPanel {
         selected = figment;
         txtName.setText(figment.getName());
         txtDesc.setText(figment.getDesc());
-        txtMv.setText(String.valueOf(figment.getMv()));
-        txtCost.setText(String.valueOf(figment.getCost()));
+        nsCost.getValueFactory().setValue(figment.getCost());
+        nsMv.getValueFactory().setValue(figment.getMv());
         this.updateFigmentTable();
       }
     });
@@ -198,6 +201,7 @@ public class FigmentsPanel {
     VBox figmentsBox = new VBox();
 
     figmentEditor = new TableView<>();
+    figmentEditor.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
     TableColumn<FigmentModel, Integer> colBonus = new TableColumn<>("Bonus");
     TableColumn<FigmentModel, String> colType = new TableColumn<>("Type");
@@ -237,10 +241,11 @@ public class FigmentsPanel {
       }
     }
 
-    NumberTextField txtBonus = new NumberTextField();
+    SpinnerAutoCommit<Integer> txtBonus = new SpinnerAutoCommit<Integer>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100));
+    txtBonus.setEditable(true);
     txtBonus.prefWidthProperty().bind(colBonus.widthProperty());
     txtBonus.minWidthProperty().bind(colBonus.minWidthProperty());
-    txtBonus.setPromptText("Bonus");
+    txtBonus.getEditor().setPromptText("Bonus");
     txtBonus.managedProperty().bind(txtBonus.visibleProperty());
 
     ComboBox<Advantage> comboAdvantages = new ComboBox<>();
@@ -281,7 +286,7 @@ public class FigmentsPanel {
           txtType.getText(),
           txtDesc.getText(),
           Attribute.POWER, //NEVER USED
-          txtBonus.getNumber().intValue(),
+          txtBonus.getValue(),
           true));
       }
       mainFrame.update(character);
@@ -297,7 +302,7 @@ public class FigmentsPanel {
         if (advantageMode) {
           model.setBonus(comboAdvantages.getValue().toInt());
         }else {
-          model.setBonus(txtBonus.getNumber().intValue());
+          model.setBonus(txtBonus.getValue().intValue());
         }
         mainFrame.update(character);
       }
@@ -334,7 +339,7 @@ public class FigmentsPanel {
       if (featModel != null) {
         txtType.setText(featModel.getName());
         txtDesc.setText(featModel.getDesc());
-        txtBonus.setNumber(new BigDecimal(featModel.getBonus()));
+        txtBonus.getValueFactory().setValue(featModel.getBonus());
         comboAdvantages.getSelectionModel().select(Advantage.fromInt(featModel.getBonus()));
         if (featModel.isAdvantageMode() != advantageMode) {
           btnToggleAdvantageMode.fire();
@@ -345,7 +350,15 @@ public class FigmentsPanel {
     controls.getChildren().addAll(btnAddForm, btnEditForm, btnToggleAdvantageMode, btnRemoveForm);
     controls.setAlignment(Pos.CENTER);
 
-    figmentsBox.getChildren().addAll(figmentEditor, inputFields, controls);
+    HBox memoryDetails = new HBox();
+
+    slotsOpen = new Label();
+    slotsOpen.setText(character.getCurrentForm().getNumberOfSlots() + " slots Open");
+
+    memoryDetails.getChildren().addAll(slotsOpen);
+    memoryDetails.setAlignment(Pos.CENTER);
+
+    figmentsBox.getChildren().addAll(figmentEditor, inputFields, controls, memoryDetails);
     return figmentsBox;
   }
 
@@ -376,6 +389,7 @@ public class FigmentsPanel {
       for (Feat feat: selected.getFeatBonuses()) {
         figmentEditor.getItems().add(new FigmentModel(feat, selected));
       }
+      slotsOpen.setText(selected.getNumberOfSlots() + " slots Open");
     }
   }
 

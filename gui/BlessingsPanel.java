@@ -25,14 +25,12 @@ public class BlessingsPanel {
 
 
   private final GridPane grid;
-  private Map<Attribute, TextField> totemMods;
-  private final DecimalFormat fmt;
+  private Map<Attribute, SpinnerAutoCommit<Integer>> totemMods;
   private final TableView<BlessingModel> tblBlessings;
 
   public BlessingsPanel(MainFrame mainFrame, ToFCharacter character) {
     grid = MainFrame.getGridPane();
     totemMods = new TreeMap<>();
-    fmt = new DecimalFormat("+#0;-#");
 
     VBox totemBox = new VBox();
     GridPane totemGrid = MainFrame.getGridPane();
@@ -42,26 +40,16 @@ public class BlessingsPanel {
 
     Totem totem = character.getTotem();
     for (Attribute a : Attribute.values()) {
-      TextField modifier = new TextField(fmt.format(totem.getAttributeBonus(a)));
-      modifier.setPrefColumnCount(3);
+      SpinnerAutoCommit<Integer> modifier = new SpinnerAutoCommit<Integer>(new SpinnerValueFactory.IntegerSpinnerValueFactory(-10, 10));
+      modifier.setEditable(true);
+      modifier.getValueFactory().setValue(totem.getAttributeBonus(a));
+      modifier.getEditor().setPrefColumnCount(3);
       totemMods.put(a, modifier);
 
-      //TODO: Switch this over to NumberSpinner
-      modifier.textProperty().addListener(
+      modifier.valueProperty().addListener(
               (observable, oldValue, newValue) -> {
-                if (!newValue.matches("^[+\\-]?\\d*$")) {
-                  Platform.runLater(() -> {
-                    modifier.setText(newValue.replaceAll("[^\\d*]", ""));
-                    modifier.positionCaret(modifier.getLength());
-                  });
-                } else {
-                  try {
-                    int value = Integer.parseInt(newValue);
-                    character.getTotem().setAttributeBonus(a, value);
+                    character.getTotem().setAttributeBonus(a, modifier.getValue());
                     mainFrame.update(character);
-                  } catch (NumberFormatException e) {
-                  }
-                }
               });
 
 
@@ -153,16 +141,10 @@ public class BlessingsPanel {
     comboAddGod.getItems().addAll(Attribute.values());
     comboAddGod.getSelectionModel().selectFirst();
 
-    TextField txtAddCost = new TextField();
-    txtAddCost.setPromptText("Cost");
+    SpinnerAutoCommit<Integer> txtAddCost = new SpinnerAutoCommit<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 6));
+    txtAddCost.getEditor().setPromptText("Cost");
     txtAddCost.prefWidthProperty().bind(colCost.widthProperty());
     txtAddCost.minWidthProperty().bind(colCost.minWidthProperty());
-    txtAddCost.textProperty().addListener((observable, oldValue, newValue) -> {
-      if (!newValue.matches("\\d*")) {
-        Platform.runLater(() -> {
-          txtAddCost.setText(newValue.replaceAll("[^\\d*]", ""));
-          txtAddCost.positionCaret(txtAddCost.getLength());
-        });}});
 
     TextField txtAddDesc = new TextField();
     txtAddDesc.setPromptText("Blessing's Desc");
@@ -185,7 +167,7 @@ public class BlessingsPanel {
         character.getTotem().addBlessing(new Blessing(
           txtAddName.getText(),
           comboAddGod.getValue(),
-          Integer.parseInt(txtAddCost.getText()),
+          txtAddCost.getValue(),
           txtAddDesc.getText()));
         mainFrame.update(character);
       }catch (NumberFormatException e) {}
@@ -197,7 +179,7 @@ public class BlessingsPanel {
       if (model != null) {
         model.setName(txtAddName.getText());
         model.setGod(String.valueOf(comboAddGod.getSelectionModel().getSelectedItem()));
-        model.setCost(Integer.parseInt(txtAddCost.getText()));
+        model.setCost(txtAddCost.getValue());
         model.setDesc(txtAddDesc.getText());
         update(character);
       }
@@ -218,7 +200,7 @@ public class BlessingsPanel {
       if (blessingModel != null) {
         txtAddName.setText(blessingModel.getName());
         comboAddGod.getSelectionModel().select(blessingModel.getBlessing().getAttribute());
-        txtAddCost.setText(String.valueOf(blessingModel.getCost()));
+        txtAddCost.getValueFactory().setValue(blessingModel.getCost());
         txtAddDesc.setText(blessingModel.getDesc());
       }
     });
@@ -237,7 +219,7 @@ public class BlessingsPanel {
     Totem totem = character.getTotem();
     for (Attribute attribute : Attribute.values()) {
       int bonus = totem.getAttributeBonus(attribute);
-      totemMods.get(attribute).setText(fmt.format(bonus));
+      totemMods.get(attribute).getValueFactory().setValue(bonus);
     }
 
 

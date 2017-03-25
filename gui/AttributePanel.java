@@ -3,6 +3,8 @@ package gui;
 import data.Attribute;
 import data.ToFCharacter;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -13,7 +15,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class AttributePanel {
-  private Map<Attribute, NumberSpinner> baseValues;
+  private final Map<Attribute, SpinnerAutoCommit<Integer>> experianceEditors;
+  private Map<Attribute, SpinnerAutoCommit<Integer>> baseValues;
   private Map<Attribute, Label> baseMods;
   private Map<Attribute, Label> modifiedValues;
   private Map<Attribute, Label> modifiedMods;
@@ -25,20 +28,22 @@ public class AttributePanel {
     baseMods = new TreeMap<>();
     modifiedValues = new TreeMap<>();
     modifiedMods = new TreeMap<>();
+    experianceEditors = new TreeMap<>();
     fmt = new DecimalFormat("+#0;-#");
 
     for(Attribute attribute: Attribute.values()) {
-      NumberSpinner txt = new NumberSpinner();
-      txt.getNumberField().setPrefColumnCount(2);
+      SpinnerAutoCommit<Integer> txtAttribute = new SpinnerAutoCommit<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 20));
+      txtAttribute.setEditable(true);
+      txtAttribute.getEditor().setPrefColumnCount(4);
       int baseValue = character.getBaseAttribute(attribute);
-      txt.setNumber(new BigDecimal(baseValue));
+      txtAttribute.getValueFactory().setValue(baseValue);
 
-      txt.numberProperty().addListener((observable, oldValue, newValue) -> {
-        character.setAttribute(attribute, newValue.intValue());
+      txtAttribute.valueProperty().addListener((observable, oldValue, newValue) -> {
+        character.setAttribute(attribute, newValue);
         mainFrame.update(character);
       });
 
-      baseValues.put(attribute, txt);
+      baseValues.put(attribute, txtAttribute);
 
       int mod = Attribute.getModifier(baseValue);
       Label lblBaseMod = new Label(fmt.format(mod));
@@ -52,13 +57,31 @@ public class AttributePanel {
       Label lblModMod = new Label(fmt.format(moddedMod));
       modifiedMods.put(attribute, lblModMod);
 
+
+      SpinnerAutoCommit<Integer> txtExperiance = new SpinnerAutoCommit<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 999));
+      experianceEditors.put(attribute, txtExperiance);
+      txtExperiance.setEditable(true);
+      txtExperiance.getEditor().setPrefColumnCount(6);
+      txtExperiance.getValueFactory().setValue(character.getExperiance(attribute));
+      txtExperiance.valueProperty().addListener((observable, oldValue, newValue) -> {
+        character.setExperiance(attribute, newValue);
+        mainFrame.update(character);
+      });
     }
 
     pane = MainFrame.getGridPane();
     pane.add(new Label("Base Attributes"), 0, 0, 3, 1);
     pane.add(new Label("Current Attributes"), 3, 0, 3, 1);
+    pane.add(new Label("Experiance"), 7, 0, 3, 1);
     for (Attribute attribute: Attribute.values()) {
-      pane.addRow(attribute.index(), new Label(attribute.getAbbrevation()), baseValues.get(attribute), baseMods.get(attribute), modifiedValues.get(attribute), modifiedMods.get(attribute));
+      pane.addRow(attribute.index(), new Label(attribute.getAbbrevation()),
+        baseValues.get(attribute),
+        baseMods.get(attribute),
+        new Separator(),
+        modifiedValues.get(attribute),
+        modifiedMods.get(attribute),
+        new Separator(),
+        experianceEditors.get(attribute));
     }
     ColumnConstraints attributeBoxs = new ColumnConstraints(60);
     pane.getColumnConstraints().addAll(new ColumnConstraints(), attributeBoxs);
@@ -69,10 +92,11 @@ public class AttributePanel {
     for (Attribute attribute: Attribute.values()) {
       int value = character.getBaseAttribute(attribute);
       int moddedValue = character.getModifiedAttribute(attribute);
-      baseValues.get(attribute).setNumber(new BigDecimal(value));
+      baseValues.get(attribute).getValueFactory().setValue(value);
       baseMods.get(attribute).setText(fmt.format(Attribute.getModifier(value)));
       modifiedValues.get(attribute).setText(String.valueOf(moddedValue));
       modifiedMods.get(attribute).setText(fmt.format(Attribute.getModifier(moddedValue)));
+      experianceEditors.get(attribute).getValueFactory().setValue(character.getExperiance(attribute));
     }
   }
 

@@ -33,4 +33,8 @@ public class Memory {
   public void setMemorisationValue(int mv) {
     setMv(Math.max(36 - 6 * (int)Math.floor(mv/4) + cost, cost));
   }
+
+  public int getNumberOfSlots() {
+    return Math.max((37 - mv) / 6, 1);
+  }
 }

@@ -20,6 +20,7 @@ public class FormsPanel {
   private  TableView<FeatModel> featTable;
   private final GridPane mainGrid;
   private boolean advantageMode;
+  private Label slotsOpen;
 
   public FormsPanel(MainFrame mainFrame, ToFCharacter character) {
     advantageMode = false;
@@ -28,8 +29,6 @@ public class FormsPanel {
     VBox formBox = getFormBox(mainFrame, character);
 
     VBox featsBox = getFeatBox(mainFrame, character);
-
-
 
     GridPane.setHgrow(formBox, Priority.ALWAYS);
     GridPane.setHgrow(featsBox, Priority.ALWAYS);
@@ -40,8 +39,8 @@ public class FormsPanel {
 
   private VBox getFormBox(MainFrame mainFrame, ToFCharacter character) {
     VBox formBox = new VBox();
-
     formTable = new TableView<>();
+    formTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
     TableColumn<FormModel, String> colName = new TableColumn<>("Name");
     TableColumn<FormModel, Integer> colMv = new TableColumn<>("MV");
@@ -102,9 +101,8 @@ public class FormsPanel {
     txtName.prefWidthProperty().bind(colName.widthProperty());
     txtName.minWidthProperty().bind(colName.minWidthProperty());
 
-    NumberSpinner nSMv = new NumberSpinner();
-    NumberTextField txtMv = nSMv.getNumberField();
-    txtMv.setPromptText("MV");
+    Spinner<Integer> nSMv = new Spinner<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 36, 1));
+    nSMv.getEditor().setPromptText("MV");
     nSMv.prefWidthProperty().bind(colMv.widthProperty());
     nSMv.minWidthProperty().bind(colMv.minWidthProperty());
 
@@ -132,7 +130,7 @@ public class FormsPanel {
         txtName.getText(),
         comboClass.getValue(),
         txtDesc.getText(),
-        nSMv.getNumber().intValue(),
+        nSMv.getValue(),
         6));
       mainFrame.update(character);
     });
@@ -144,7 +142,7 @@ public class FormsPanel {
         model.setName(txtName.getText());
         model.setFormClass(comboClass.getValue());
         model.setDesc(txtDesc.getText());
-        model.setMv(nSMv.getNumber().intValue());
+        model.setMv(nSMv.getValue());
         mainFrame.update(character);
       }
     });
@@ -175,7 +173,7 @@ public class FormsPanel {
         txtName.setText(formModel.getName());
         comboClass.getSelectionModel().select(formModel.getFormClass()-1);
         txtDesc.setText(formModel.getDesc());
-        txtMv.setText(String.valueOf(formModel.getMv()));
+        nSMv.getValueFactory().setValue(formModel.getMv());
       }
     });
 
@@ -259,10 +257,11 @@ public class FormsPanel {
     comboAttributes.getItems().addAll(Attribute.values());
     comboAttributes.getSelectionModel().selectFirst();
 
-    NumberTextField txtBonus = new NumberTextField();
+    SpinnerAutoCommit<Integer> txtBonus = new SpinnerAutoCommit<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(-10, 10));
+    txtBonus.setEditable(true);
     txtBonus.prefWidthProperty().bind(colBonus.widthProperty());
     txtBonus.minWidthProperty().bind(colBonus.minWidthProperty());
-    txtBonus.setPromptText("Bonus");
+    txtBonus.getEditor().setPromptText("Bonus");
     txtBonus.managedProperty().bind(txtBonus.visibleProperty());
 
     ComboBox<Advantage> comboAdvantages = new ComboBox<>();
@@ -298,7 +297,7 @@ public class FormsPanel {
           txtName.getText(),
           txtDesc.getText(),
           comboAttributes.getValue(),
-          txtBonus.getNumber().intValue(),
+          txtBonus.getValue(),
           true));
       }
       mainFrame.update(character);
@@ -314,7 +313,7 @@ public class FormsPanel {
         if (advantageMode) {
           model.setBonus(comboAdvantages.getValue().toInt());
         }else {
-          model.setBonus(txtBonus.getNumber().intValue());
+          model.setBonus(txtBonus.getValue());
         }
         model.setAttribute(comboAttributes.getValue().name());
         mainFrame.update(character);
@@ -360,7 +359,7 @@ public class FormsPanel {
       if (featModel != null) {
         txtName.setText(featModel.getName());
         txtDesc.setText(featModel.getDesc());
-        txtBonus.setNumber(new BigDecimal(featModel.getBonus()));
+        txtBonus.getValueFactory().setValue(featModel.getBonus());
         comboAdvantages.getSelectionModel().select(Advantage.fromInt(featModel.getBonus()));
         comboAttributes.getSelectionModel().select(Attribute.valueOf(featModel.getAttribute()));
         if (featModel.isAdvantageMode() != advantageMode) {
@@ -372,7 +371,16 @@ public class FormsPanel {
     controls.getChildren().addAll(btnAddForm, btnEditForm, btnToggleAdvantageMode, btnToggleActive, btnRemoveForm);
     controls.setAlignment(Pos.CENTER);
 
-    featBox.getChildren().addAll(featTable, inputFields, controls);
+
+    HBox memoryDetails = new HBox();
+
+    slotsOpen = new Label();
+    slotsOpen.setText(character.getCurrentForm().getNumberOfSlots() + " slots Open");
+
+    memoryDetails.getChildren().addAll(slotsOpen);
+    memoryDetails.setAlignment(Pos.CENTER);
+
+    featBox.getChildren().addAll(featTable, inputFields, controls, memoryDetails);
     return featBox;
   }
 
@@ -399,6 +407,8 @@ public class FormsPanel {
       FeatModel model = new FeatModel(feat);
       featTable.getItems().add(model);
     }
+
+    slotsOpen.setText(character.getCurrentForm().getNumberOfSlots() + " slots Open");
   }
 
 }

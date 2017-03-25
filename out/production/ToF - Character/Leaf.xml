@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Character>
+    <attributes>
+        <entry>
+            <key>POWER</key>
+            <value>4</value>
+        </entry>
+        <entry>
+            <key>FINESE</key>
+            <value>12</value>
+        </entry>
+        <entry>
+            <key>RESISENCE</key>
+            <value>6</value>
+        </entry>
+        <entry>
+            <key>INTELIGENCE</key>
+            <value>12</value>
+        </entry>
+        <entry>
+            <key>WITS</key>
+            <value>7</value>
+        </entry>
+        <entry>
+            <key>PRESENCE</key>
+            <value>8</value>
+        </entry>
+    </attributes>
+    <baseInit>6</baseInit>
+    <bio>Testing
+</bio>
+    <body>22</body>
+    <body>22</body>
+    <body>22</body>
+    <body>22</body>
+    <body>22</body>
+    <body>22</body>
+    <body>22</body>
+    <currentFate>5</currentFate>
+    <currentForm>
+        <desc>An incorpeal feat, perfect for scouting</desc>
+        <bonus>3</bonus>
+        <name>Shadow</name>
+    </currentForm>
+    <currentInit>6</currentInit>
+    <fateDamage>0</fateDamage>
+    <forms>
+        <desc>Your normal everyday body</desc>
+        <bonus>3</bonus>
+        <name>You</name>
+    </forms>
+    <forms>
+        <desc>An incorpeal feat, perfect for scouting</desc>
+        <bonus>3</bonus>
+        <name>Shadow</name>
+    </forms>
+    <forms>
+        <desc>Small, light and nimble</desc>
+        <bonus>2</bonus>
+        <name>Cat</name>
+    </forms>
+    <mind>27</mind>
+    <mind>27</mind>
+    <mind>27</mind>
+    <mind>27</mind>
+    <mind>27</mind>
+    <mind>27</mind>
+    <mind>27</mind>
+    <name>Leaf</name>
+    <totem>
+        <blessings>
+            <description>Add 1d6 to a RES Roll</description>
+            <attribute>RESISENCE</attribute>
+            <level>1</level>
+            <name>Harden</name>
+        </blessings>
+        <blessings>
+            <description>Add 2 to an adjcent Ally's RES total</description>
+            <attribute>RESISENCE</attribute>
+            <level>1</level>
+            <name>Guard</name>
+        </blessings>
+        <blessings>
+            <description>Increase your or one adjacent target’s Body by 1d6 + your RES total/2</description>
+            <attribute>RESISENCE</attribute>
+            <level>2</level>
+            <name>Repair</name>
+        </blessings>
+        <blessings>
+            <description>Elect to be the target of an attack made against one another target. Reduce theresulting damage by your Resilience total/2.</description>
+            <attribute>RESISENCE</attribute>
+            <level>2</level>
+            <name>Sentry</name>
+        </blessings>
+        <blessings>
+            <description>You and all allies increase your resistance to one physical damage type for theencounter.</description>
+            <attribute>RESISENCE</attribute>
+            <level>3</level>
+            <name>Resist</name>
+        </blessings>
+        <totemBonus>
+            <entry>
+                <key>POWER</key>
+                <value>0</value>
+            </entry>
+            <entry>
+                <key>FINESE</key>
+                <value>0</value>
+            </entry>
+            <entry>
+                <key>RESISENCE</key>
+                <value>2</value>
+            </entry>
+            <entry>
+                <key>INTELIGENCE</key>
+                <value>0</value>
+            </entry>
+            <entry>
+                <key>WITS</key>
+                <value>0</value>
+            </entry>
+            <entry>
+                <key>PRESENCE</key>
+                <value>0</value>
+            </entry>
+        </totemBonus>
+    </totem>
+</Character>

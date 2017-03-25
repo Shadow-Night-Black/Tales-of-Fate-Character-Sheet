@@ -2,8 +2,6 @@ package data;
 
 
 
-import javafx.collections.transformation.SortedList;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -25,13 +23,16 @@ public class ToFCharacter {
   private int fateDamage, currentFate;
   private List<Integer> body, mind;
   private int baseInit, currentInit;
+  private Map<Attribute, Integer> experianceMap;
 
   public ToFCharacter(String name, String bio) {
     this.name = name;
     this.bio = bio;
     attributes = new TreeMap<>();
+    experianceMap = new TreeMap<>();
     for (Attribute attribute: Attribute.values()) {
       attributes.put(attribute, 6);
+      experianceMap.put(attribute, 0);
     }
 
     forms = new TreeSet<>();
@@ -399,5 +400,21 @@ public class ToFCharacter {
 
   public void removeFigment(Figment figment) {
     figments.remove(figment);
+  }
+
+  public int getExperiance(Attribute attribute) {
+    return experianceMap.get(attribute);
+  }
+
+  public void setExperiance(Attribute attribute, int value) {
+    experianceMap.put(attribute, Math.max(value, 0));
+  }
+
+  public Map<Attribute, Integer> getExperianceMap() {
+    return experianceMap;
+  }
+
+  public void setExperianceMap(Map<Attribute, Integer> experianceMap) {
+    this.experianceMap = experianceMap;
   }
 }
