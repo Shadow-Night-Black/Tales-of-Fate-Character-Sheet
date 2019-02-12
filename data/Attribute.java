@@ -5,12 +5,12 @@ import javafx.scene.paint.Color;
 public enum Attribute {
 
 
-  POWER("Pow", Color.RED, "Warroch", 1, true),
-  FINESE("Fin", Color.BLACK, "Virimis", 2, true),
-  RESISENCE("Res", Color.BROWN, "Corservus", 3, true),
-  INTELIGENCE("Int", Color.PURPLE, "Genevie", 4, false),
-  WITS("Wit", Color.WHITE, "Pherynne", 5, false),
-  PRESENCE("Pres", Color.GOLD, "Belia", 6, false);
+  POWER("Pow", Color.RED, "Warroch", "The Abyss" ,1, true),
+  FINESE("Fin", Color.BLACK, "Virimis", "The Fall", 2, true),
+  RESISENCE("Res", Color.BROWN, "Corservus", "The Legion", 3, true),
+  INTELIGENCE("Int", Color.PURPLE, "Genevie", "The North Star", 4, false),
+  WITS("Wit", Color.WHITE, "Pherynne",  "The Sunrise", 5, false),
+  PRESENCE("Pres", Color.GOLD, "Belia",  "The Eclipse", 6, false);
 
 
   private final String abbrevation;
@@ -20,7 +20,7 @@ public enum Attribute {
   private final int index;
   private boolean physical;
 
-  Attribute(String abbrevation, Color color,String god,  int index, boolean physical) {
+  Attribute(String abbrevation, Color color,String god, String Aspect,  int index, boolean physical) {
     this.abbrevation = abbrevation;
     this.color = color;
     this.god = god;
@@ -28,7 +28,7 @@ public enum Attribute {
     this.physical = physical;
   }
 
-  public String getAbbrevation(){
+  public String getAbbreviation(){
     return this.abbrevation;
   }
 

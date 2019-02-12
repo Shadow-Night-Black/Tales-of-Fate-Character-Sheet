@@ -14,38 +14,37 @@ import java.util.*;
 @XmlRootElement(name = "Character")
 public class ToFCharacter {
   private Map<Attribute, Integer> attributes;
-  private Collection<Form> forms;
-  private Form currentForm;
   private Collection<Skill> skills;
   private Collection<Figment> figments;
   private Totem totem;
   private String name, bio;
   private int fateDamage, currentFate;
   private List<Integer> body, mind;
-  private int baseInit, currentInit;
-  private Map<Attribute, Integer> experianceMap;
+//  private int baseInit, currentInit;
+  private Map<Attribute, DicePool> dicePools;
+  private int classSize;
+  private int experiance;
 
   public ToFCharacter(String name, String bio) {
     this.name = name;
     this.bio = bio;
     attributes = new TreeMap<>();
-    experianceMap = new TreeMap<>();
+    dicePools = new TreeMap<>();
     for (Attribute attribute: Attribute.values()) {
       attributes.put(attribute, 6);
-      experianceMap.put(attribute, 0);
+      dicePools.put(attribute, new DicePool());
     }
 
-    forms = new TreeSet<>();
+    this.classSize = 3;
+
     skills = new TreeSet<>();
     figments = new TreeSet<>();
-    this.currentForm = new Form();
-    forms.add(currentForm);
     this.totem = new Totem();
 
     this.body = new ArrayList<>(7);
     this.mind = new ArrayList<>(7);
-    int bodySegment = getBaseBody() / getCurrentForm().getFormClass();
-    int mindSegment = getBaseMind() / getCurrentForm().getFormClass();
+    int bodySegment = getBaseBody() / classSize;
+    int mindSegment = getBaseMind() / classSize;
     for (int i = 0; i < 7; i++) {
       body.add(bodySegment);
       mind.add(mindSegment);
@@ -53,7 +52,8 @@ public class ToFCharacter {
 
     this.fateDamage = 0;
     this.currentFate = this.getBaseFate();
-    this.currentInit = 0;
+//    this.currentInit = 0;
+    this.experiance = 0;
   }
 
   public ToFCharacter() {
@@ -95,7 +95,7 @@ public class ToFCharacter {
   }
 
   public int getModifiedAttribute(Attribute attribute) {
-    return getBaseAttribute(attribute) + currentForm.getAttributeBonus(attribute) + totem.getAttributeBonus(attribute);
+    return getBaseAttribute(attribute) + totem.getAttributeBonus(attribute);
   }
 
   public void save() {
@@ -122,7 +122,6 @@ public class ToFCharacter {
       Unmarshaller u = jc.createUnmarshaller();
       if (f.exists() && f.isFile() && f.canRead()) {
         ToFCharacter character = (ToFCharacter) u.unmarshal(f);
-        character.fixCurrentForm();
         return character;
       }
     } catch (JAXBException e) {
@@ -130,17 +129,6 @@ public class ToFCharacter {
     }
     throw new RuntimeException("Couldn't load character!");
   }
-
-  private void fixCurrentForm() {
-    for (Form form: forms) {
-      if (form.equals(currentForm)) {
-        this.currentForm = form;
-        return;
-      }
-    }
-   // throw new RuntimeException("CurrentForm Not FOUND!!!!");
-  }
-
 
   public Map<Attribute, Integer> getAttributes() {
     return attributes;
@@ -150,9 +138,6 @@ public class ToFCharacter {
     this.attributes = attributes;
   }
 
-  public Collection<Form> getForms() {
-    return forms;
-  }
 
   @Deprecated
   public void setForms(Collection<Form> forms) {
@@ -188,7 +173,7 @@ public class ToFCharacter {
     int totalBody = 0;
     for (Attribute attribute: Attribute.values()){
       if (attribute.isPhysical()) {
-        totalBody += currentForm.getFormClass() * attributes.get(attribute);
+        totalBody += classSize * attributes.get(attribute);
       }
     }
     return totalBody;
@@ -198,14 +183,14 @@ public class ToFCharacter {
     int totalMind = 0;
     for (Attribute attribute: Attribute.values()){
       if (attribute.isMental()) {
-        totalMind += currentForm.getFormClass() * attributes.get(attribute);
+        totalMind += classSize * attributes.get(attribute);
       }
     }
     return totalMind;
   }
 
   public void takePhysicalDamage(int damage) {
-    int currentSegment = currentForm.getFormClass();
+    int currentSegment = classSize;
     do {
       if (body.get(currentSegment) < damage) {
         damage -= body.get(currentSegment);
@@ -220,7 +205,7 @@ public class ToFCharacter {
   }
 
   public void takeMentalDamage(int damage) {
-    int currentSegment = currentForm.getFormClass();
+    int currentSegment = classSize;
     do {
       if (mind.get(currentSegment) < damage) {
         damage -= mind.get(currentSegment);
@@ -235,7 +220,7 @@ public class ToFCharacter {
 
   public void healPhysicalDamage(int healing) {
     int currentSegment = 0;
-    int segmentMax = getBaseBody() / currentForm.getFormClass();
+    int segmentMax = getBaseBody() / classSize;
     do {
       if (body.get(currentSegment) < segmentMax) {
         int amountToHeal  = segmentMax - body.get(currentSegment);
@@ -255,7 +240,7 @@ public class ToFCharacter {
 
   public void healMentalDamage(int healing) {
     int currentSegment = 0;
-    int segmentMax = getBaseMind() / currentForm.getFormClass();
+    int segmentMax = getBaseMind() /  classSize;
     do {
       if (mind.get(currentSegment) < segmentMax) {
         int amountToHeal  = segmentMax - mind.get(currentSegment);
@@ -333,22 +318,6 @@ public class ToFCharacter {
       this.currentFate = currentFate;
   }
 
-  public Form getCurrentForm() {
-    return currentForm;
-  }
-
-  public void setCurrentForm(Form currentForm) {
-    this.currentForm = currentForm;
-  }
-
-  public void addForm(Form form) {
-    this.forms.add(form);
-  }
-
-  public void removeForm(Form form) {
-    this.forms.remove(form);
-  }
-
   public List<Integer> getBody() {
     return body;
   }
@@ -365,26 +334,26 @@ public class ToFCharacter {
     this.mind = mind;
   }
 
-  public int getBaseInit() {
-    return baseInit;
-  }
+//  public int getBaseInit() {
+//    return baseInit;
+//  }
 
-  public void setBaseInit(int baseInit) {
-    this.baseInit = baseInit;
-    this.currentInit = baseInit;
-  }
+//  public void setBaseInit(int baseInit) {
+//    this.baseInit = baseInit;
+//    this.currentInit = baseInit;
+//  }
 
-  public int getCurrentInit() {
-    return currentInit;
-  }
+//  public int getCurrentInit() {
+//    return currentInit;
+//  }
 
-  public void setCurrentInit(int currentInit) {
-    if (currentInit < baseInit) {
-      this.currentInit = currentInit;
-    }else {
-      this.currentInit = baseInit;
-    }
-  }
+//  public void setCurrentInit(int currentInit) {
+//    if (currentInit < baseInit) {
+//      this.currentInit = currentInit;
+//    }else {
+//      this.currentInit = baseInit;
+//    }
+//  }
 
   public void addAbility(Skill skill) {
     skills.add(skill);
@@ -402,19 +371,12 @@ public class ToFCharacter {
     figments.remove(figment);
   }
 
-  public int getExperiance(Attribute attribute) {
-    return experianceMap.get(attribute);
+  public int getExperiance() {
+    return experiance;
   }
 
-  public void setExperiance(Attribute attribute, int value) {
-    experianceMap.put(attribute, Math.max(value, 0));
+  public void setExperiance(int value) {
+    experiance = value;
   }
 
-  public Map<Attribute, Integer> getExperianceMap() {
-    return experianceMap;
-  }
-
-  public void setExperianceMap(Map<Attribute, Integer> experianceMap) {
-    this.experianceMap = experianceMap;
-  }
 }

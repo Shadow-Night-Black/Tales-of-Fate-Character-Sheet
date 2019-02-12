@@ -9,7 +9,6 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.TreeMap;
@@ -58,30 +57,30 @@ public class AttributePanel {
       modifiedMods.put(attribute, lblModMod);
 
 
-      SpinnerAutoCommit<Integer> txtExperiance = new SpinnerAutoCommit<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 999));
-      experianceEditors.put(attribute, txtExperiance);
-      txtExperiance.setEditable(true);
-      txtExperiance.getEditor().setPrefColumnCount(6);
-      txtExperiance.getValueFactory().setValue(character.getExperiance(attribute));
-      txtExperiance.valueProperty().addListener((observable, oldValue, newValue) -> {
-        character.setExperiance(attribute, newValue);
-        mainFrame.update(character);
-      });
+//      SpinnerAutoCommit<Integer> txtExperiance = new SpinnerAutoCommit<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 999));
+//      experianceEditors.put(attribute, txtExperiance);
+//      txtExperiance.setEditable(true);
+//      txtExperiance.getEditor().setPrefColumnCount(6);
+//      txtExperiance.getValueFactory().setValue(character.getExperiance(attribute));
+//      txtExperiance.valueProperty().addListener((observable, oldValue, newValue) -> {
+//        character.setExperiance(attribute, newValue);
+//        mainFrame.update(character);
+//      });
     }
 
     pane = MainFrame.getGridPane();
     pane.add(new Label("Base Attributes"), 0, 0, 3, 1);
     pane.add(new Label("Current Attributes"), 3, 0, 3, 1);
-    pane.add(new Label("Experiance"), 7, 0, 3, 1);
+//    pane.add(new Label("Experiance"), 7, 0, 3, 1);
     for (Attribute attribute: Attribute.values()) {
-      pane.addRow(attribute.index(), new Label(attribute.getAbbrevation()),
+      pane.addRow(attribute.index(), new Label(attribute.getAbbreviation()),
         baseValues.get(attribute),
         baseMods.get(attribute),
         new Separator(),
         modifiedValues.get(attribute),
-        modifiedMods.get(attribute),
-        new Separator(),
-        experianceEditors.get(attribute));
+        modifiedMods.get(attribute));
+//        new Separator(),
+//        experianceEditors.get(attribute));
     }
     ColumnConstraints attributeBoxs = new ColumnConstraints(60);
     pane.getColumnConstraints().addAll(new ColumnConstraints(), attributeBoxs);
@@ -96,7 +95,7 @@ public class AttributePanel {
       baseMods.get(attribute).setText(fmt.format(Attribute.getModifier(value)));
       modifiedValues.get(attribute).setText(String.valueOf(moddedValue));
       modifiedMods.get(attribute).setText(fmt.format(Attribute.getModifier(moddedValue)));
-      experianceEditors.get(attribute).getValueFactory().setValue(character.getExperiance(attribute));
+//      experianceEditors.get(attribute).getValueFactory().setValue(character.getExperiance(attribute));
     }
   }
 

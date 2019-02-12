@@ -353,7 +353,7 @@ public class FigmentsPanel {
     HBox memoryDetails = new HBox();
 
     slotsOpen = new Label();
-    slotsOpen.setText(character.getCurrentForm().getNumberOfSlots() + " slots Open");
+    //slotsOpen.setText(character.getCurrentForm().getNumberOfSlots() + " slots Open");
 
     memoryDetails.getChildren().addAll(slotsOpen);
     memoryDetails.setAlignment(Pos.CENTER);

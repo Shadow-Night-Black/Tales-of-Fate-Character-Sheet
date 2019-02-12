@@ -5,7 +5,6 @@ import data.Blessing;
 import data.ToFCharacter;
 import data.Totem;
 import gui.models.BlessingModel;
-import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -17,7 +16,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
 
-import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -53,7 +51,7 @@ public class BlessingsPanel {
               });
 
 
-      totemGrid.addRow(a.index(), new Label(a.getAbbrevation()), modifier);
+      totemGrid.addRow(a.index(), new Label(a.getAbbreviation()), modifier);
     }
 
 

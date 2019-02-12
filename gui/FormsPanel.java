@@ -14,7 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import java.math.BigDecimal;
-
+/*
 public class FormsPanel {
   private TableView<FormModel> formTable;
   private  TableView<FeatModel> featTable;
@@ -412,3 +412,4 @@ public class FormsPanel {
   }
 
 }
+*/
