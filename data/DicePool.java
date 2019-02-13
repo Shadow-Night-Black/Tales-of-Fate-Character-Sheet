@@ -4,7 +4,7 @@ package data;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class DicePool<dice> {
+public class DicePool {
   Map<Dice, Integer> dice;
 
   public DicePool() {
@@ -38,5 +38,17 @@ public class DicePool<dice> {
       pips += dice.get(d) * d.pips();
     }
     return pips;
+  }
+
+  public int rollPool(SkillLevel level){
+    return 0;
+  }
+
+  public int getNumberOfDice(Dice die) {
+    return dice.get(die);
+  }
+
+  public void setNumberOfDice(Dice die, int number) {
+    dice.put(die, number);
   }
 }

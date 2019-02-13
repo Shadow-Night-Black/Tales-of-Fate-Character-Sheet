@@ -379,4 +379,11 @@ public class ToFCharacter {
     experiance = value;
   }
 
+  public DicePool getDicePool(Attribute attribute) {
+    return dicePools.get(attribute);
+  }
+
+  public void setDicePool(Attribute attribute, DicePool pool) {
+    dicePools.put(attribute, pool);
+  }
 }
