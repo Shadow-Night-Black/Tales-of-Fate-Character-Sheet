@@ -6,26 +6,37 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.io.File;
 import java.util.*;
 
 
 @XmlRootElement(name = "Character")
 public class ToFCharacter {
+  @XmlElement(name = "attributes")
   private Map<Attribute, Integer> attributes;
+  @XmlElement(name = "skills")
   private Collection<Skill> skills;
+  @XmlElement(name = "figments")
   private Collection<Figment> figments;
+  @XmlElement(name = "totem")
   private Totem totem;
-  private String name, bio;
-  private int fateDamage, currentFate;
-  private List<Integer> body, mind;
+  private String name;
+  private String bio;
+  private int currentFate;
+  @XmlElement(name = "body")
+  private List<Integer> body;
+  @XmlElement(name = "mind")
+  private List<Integer> mind;
 //  private int baseInit, currentInit;
+  @XmlElement(name = "dicePools")
   private Map<Attribute, DicePool> dicePools;
+
+  @XmlElement(name = "class")
   private int classSize;
   private int experiance;
 
-  public ToFCharacter(String name, String bio) {
+  private ToFCharacter(String name, String bio) {
     this.name = name;
     this.bio = bio;
     attributes = new TreeMap<>();
@@ -50,7 +61,7 @@ public class ToFCharacter {
       mind.add(mindSegment);
     }
 
-    this.fateDamage = 0;
+//    this.fateDamage = 0;
     this.currentFate = this.getBaseFate();
 //    this.currentInit = 0;
     this.experiance = 0;
@@ -82,6 +93,7 @@ public class ToFCharacter {
     return totem;
   }
 
+  @XmlAttribute(name = "Name")
   public String getName() {
     return name;
   }
@@ -121,8 +133,7 @@ public class ToFCharacter {
       JAXBContext jc  = JAXBContext.newInstance(ToFCharacter.class);
       Unmarshaller u = jc.createUnmarshaller();
       if (f.exists() && f.isFile() && f.canRead()) {
-        ToFCharacter character = (ToFCharacter) u.unmarshal(f);
-        return character;
+        return (ToFCharacter) u.unmarshal(f);
       }
     } catch (JAXBException e) {
       e.printStackTrace();
@@ -134,36 +145,36 @@ public class ToFCharacter {
     return attributes;
   }
 
-  public void setAttributes(Map<Attribute, Integer> attributes) {
-    this.attributes = attributes;
-  }
+//  public void setAttributes(Map<Attribute, Integer> attributes) {
+//    this.attributes = attributes;
+//  }
 
 
-  @Deprecated
-  public void setForms(Collection<Form> forms) {
-    throw new RuntimeException("Don't use SetForms()");
-  }
+//  @Deprecated
+//  public void setForms(Collection<Form> forms) {
+//    throw new RuntimeException("Don't use SetForms()");
+//  }
 
 
   public Collection<Skill> getSkills() {
     return skills;
   }
 
-  public void setSkills(Collection<Skill> skills) {
-    this.skills = skills;
-  }
+//  public void setSkills(Collection<Skill> skills) {
+//    this.skills = skills;
+//  }
 
   public Collection<Figment> getFigments() {
     return figments;
   }
 
-  public void setFigments(Collection<Figment> figments) {
-    this.figments = figments;
-  }
+//  public void setFigments(Collection<Figment> figments) {
+//    this.figments = figments;
+//  }
 
-  public void setTotem(Totem totem) {
-    this.totem = totem;
-  }
+//  public void setTotem(Totem totem) {
+//    this.totem = totem;
+//  }
 
   public void setName(String name) {
     this.name = name;
@@ -299,16 +310,16 @@ public class ToFCharacter {
   }
 
   public int getBaseFate() {
-    return totem.getBaseFate() - this.fateDamage;
+    return totem.getBaseFate();// - this.fateDamage;
   }
 
-  public int getFateDamage() {
-    return fateDamage;
-  }
-
-  public void setFateDamage(int fateDamage) {
-    this.fateDamage = Math.max(fateDamage, 0);
-  }
+//  public int getFateDamage() {
+//    return fateDamage;
+//  }
+//
+//  public void setFateDamage(int fateDamage) {
+//    this.fateDamage = Math.max(fateDamage, 0);
+//  }
 
   public int getCurrentFate() {
     return Math.min(currentFate, getBaseFate());
@@ -322,17 +333,17 @@ public class ToFCharacter {
     return body;
   }
 
-  public void setBody(List<Integer> body) {
-    this.body = body;
-  }
+//  public void setBody(List<Integer> body) {
+//    this.body = body;
+//  }
 
   public List<Integer> getMind() {
     return mind;
   }
 
-  public void setMind(List<Integer> mind) {
-    this.mind = mind;
-  }
+//  public void setMind(List<Integer> mind) {
+//    this.mind = mind;
+//  }
 
 //  public int getBaseInit() {
 //    return baseInit;

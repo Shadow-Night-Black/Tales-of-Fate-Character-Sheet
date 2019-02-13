@@ -1,18 +1,22 @@
 package data;
 
 
+import javax.xml.bind.annotation.XmlElement;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
+
 public class DicePool {
-  Map<Dice, Integer> dice;
+  @XmlElement
+  private Map<Dice, Integer> dice;
 
   public DicePool() {
     this(0, 1, 0, 0, 0, 0);
   }
 
   public DicePool (int d4, int d6, int d8, int d10, int d12, int d20) {
-    dice = new TreeMap<Dice, Integer>();
+    dice = new TreeMap<>();
     dice.put(Dice.d4, d4);
     dice.put(Dice.d6, d6);
     dice.put(Dice.d8, d8);
@@ -22,7 +26,7 @@ public class DicePool {
   }
 
   public DicePool (Map<Dice, Integer> pool) {
-    dice = new TreeMap<Dice, Integer>();
+    dice = new TreeMap<>();
     for (Dice d: Dice.values()) {
       Integer numberOfDice = pool.get(d);
       if (numberOfDice != null)
