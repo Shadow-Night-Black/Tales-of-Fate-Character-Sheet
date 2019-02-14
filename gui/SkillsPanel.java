@@ -1,6 +1,9 @@
 package gui;
 
-import data.*;
+import data.Attribute;
+import data.Skill;
+import data.SkillLevel;
+import data.ToFCharacter;
 import gui.models.FeatModel;
 import gui.models.SkillModel;
 import javafx.geometry.Pos;
@@ -11,10 +14,11 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import org.controlsfx.control.CheckComboBox;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SkillsPanel {
 
@@ -223,12 +227,13 @@ public class SkillsPanel {
     txtName.prefWidthProperty().bind(colName.widthProperty());
     txtName.minWidthProperty().bind(colName.minWidthProperty());
 
-    CheckComboBox<Attribute> comboAttributes = new CheckComboBox<>();
-    comboAttributes.prefWidthProperty().bind(colAttribute.widthProperty());
-    comboAttributes.minWidthProperty().bind(colAttribute.minWidthProperty());
+    MenuButton listAttributes = new MenuButton("Attributes");
+    listAttributes.prefWidthProperty().bind(colAttribute.widthProperty());
+    listAttributes.minWidthProperty().bind(colAttribute.minWidthProperty());
 
-    comboAttributes.getItems().addAll(Attribute.values());
-    comboAttributes.getCheckModel().check(Attribute.POWER);
+    Arrays.stream(Attribute.values()).map(Attribute::toString).map(CheckMenuItem::new).forEach(listAttributes.getItems()::add);
+//    listAttributes.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
 
 
     ComboBox<SkillLevel> comboLevel = new ComboBox<>();
@@ -239,16 +244,19 @@ public class SkillsPanel {
     comboLevel.getSelectionModel().select(SkillLevel.PROFICENT);
 
 
-    inputFields.getChildren().addAll(txtName, comboLevel, comboAttributes);
+    inputFields.getChildren().addAll(txtName, comboLevel, listAttributes);
 
     HBox controls = new HBox();
 
     Button btnAddSkill = new Button("Add");
     btnAddSkill.setOnAction(actionEvent -> {
-      Skill skill = new Skill(
-        txtName.getText(),
-        comboLevel.getValue(),
-        comboAttributes.getCheckModel().getCheckedItems().toArray(new Attribute[comboAttributes.getCheckModel().getCheckedItems().size()]));
+      List<Attribute> attributeList = new ArrayList<>();
+      for (MenuItem menuItem : listAttributes.getItems()) {
+        if (((CheckMenuItem)menuItem).isSelected()) {
+          attributeList.add(Attribute.valueOf(menuItem.getText()));
+        }
+      }
+      Skill skill = new Skill(txtName.getText(), comboLevel.getValue(), attributeList);
       character.addAbility(skill);
       mainFrame.update(character);
     });
@@ -257,7 +265,11 @@ public class SkillsPanel {
     btnEditSkill.setOnAction(actionEvent -> {
       SkillModel model = skillTable.getSelectionModel().getSelectedItem();
       List<Attribute> attributes = new ArrayList<>();
-      comboAttributes.getCheckModel().getCheckedItems().forEach(attributes::add);
+      for (MenuItem menuItem : listAttributes.getItems()) {
+        if (((CheckMenuItem)menuItem).isSelected()) {
+          attributes.add(Attribute.valueOf(menuItem.getText()));
+        }
+      }
       if (model != null) {
         model.setName(txtName.getText());
         model.setLevel(comboLevel.getValue().toString());
@@ -282,10 +294,7 @@ public class SkillsPanel {
       if (skillModel != null) {
         txtName.setText(skillModel.getName());
         comboLevel.getSelectionModel().select(SkillLevel.valueOf(skillModel.getLevel()));
-        comboAttributes.getCheckModel().clearChecks();
-        for(Attribute attribute: skillModel.getSkill().getAttributes()) {
-          comboAttributes.getCheckModel().check(attribute);
-        }
+        listAttributes.getItems().forEach(t -> ((CheckMenuItem )t).setSelected(skillModel.getSkill().getAttributes().contains(Attribute.valueOf(t.getText()))));
       }
     });
 

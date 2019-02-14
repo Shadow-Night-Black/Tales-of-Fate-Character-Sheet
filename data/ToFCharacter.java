@@ -14,31 +14,31 @@ import java.util.*;
 @XmlRootElement(name = "Character")
 public class ToFCharacter {
   @XmlElement(name = "attributes")
-  private Map<Attribute, Integer> attributes;
+  private final Map<Attribute, Integer> attributes;
   @XmlElement(name = "skills")
-  private Collection<Skill> skills;
+  private final Collection<Skill> skills;
   @XmlElement(name = "figments")
-  private Collection<Figment> figments;
+  private final Collection<Figment> figments;
   @XmlElement(name = "totem")
-  private Totem totem;
+  private final Totem totem;
   private String name;
   private String bio;
   private int currentFate;
   @XmlElement(name = "body")
-  private List<Integer> body;
+  private final List<Integer> body;
   @XmlElement(name = "mind")
-  private List<Integer> mind;
+  private final List<Integer> mind;
 //  private int baseInit, currentInit;
   @XmlElement(name = "dicePools")
-  private Map<Attribute, DicePool> dicePools;
+  private final Map<Attribute, DicePool> dicePools;
 
   @XmlElement(name = "class")
   private int classSize;
   private int experiance;
 
-  private ToFCharacter(String name, String bio) {
-    this.name = name;
-    this.bio = bio;
+  public ToFCharacter() {
+    this.name = "New Character";
+    this.bio = "Write you backstory here!";
     attributes = new TreeMap<>();
     dicePools = new TreeMap<>();
     for (Attribute attribute: Attribute.values()) {
@@ -65,10 +65,6 @@ public class ToFCharacter {
     this.currentFate = this.getBaseFate();
 //    this.currentInit = 0;
     this.experiance = 0;
-  }
-
-  public ToFCharacter() {
-    this("New Character", "Write your characters backstory here!");
   }
 
   public int getBaseAttribute(Attribute attribute) {

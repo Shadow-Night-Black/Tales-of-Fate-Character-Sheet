@@ -28,7 +28,7 @@ public class DicePoolUI {
 
     panel = new HBox(2);
 
-    dice = new TreeMap<Dice, Spinner<Integer>>();
+    dice = new TreeMap<>();
 
     for (Dice die : Dice.values()) {
         Label dieSize = new Label(die.getIdentifier());

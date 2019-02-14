@@ -8,8 +8,8 @@ public enum Dice {
   d12(12, "D12"),
   d20(20, "D20");
 
-  private String identifier;
-  private int size;
+  private final String identifier;
+  private final int size;
 
 
   Dice(int size, String identifier) {

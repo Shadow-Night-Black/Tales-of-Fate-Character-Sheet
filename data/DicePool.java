@@ -9,7 +9,7 @@ import java.util.TreeMap;
 
 public class DicePool {
   @XmlElement
-  private Map<Dice, Integer> dice;
+  private final Map<Dice, Integer> dice;
 
   public DicePool() {
     this(0, 1, 0, 0, 0, 0);
@@ -29,10 +29,7 @@ public class DicePool {
     dice = new TreeMap<>();
     for (Dice d: Dice.values()) {
       Integer numberOfDice = pool.get(d);
-      if (numberOfDice != null)
-        dice.put(d, numberOfDice);
-      else
-        dice.put(d, 0);
+      dice.put(d, Objects.requireNonNullElse(numberOfDice, (Integer) 0));
     }
   }
 

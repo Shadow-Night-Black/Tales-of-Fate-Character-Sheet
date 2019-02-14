@@ -199,11 +199,7 @@ public class StatsPanel {
 
 // Traditional way to get the response value.
     Optional<String> result = dialog.showAndWait();
-    if (result.isPresent()){
-      return Optional.of(Integer.parseInt(result.get()));
-    }else {
-      return Optional.empty();
-    }
+    return result.map(Integer::parseInt);
   }
 
   private Optional<Pair<Integer, Integer>> createDoublePrompt(String title, String query, String label1, String label2, String buttonLabel) {

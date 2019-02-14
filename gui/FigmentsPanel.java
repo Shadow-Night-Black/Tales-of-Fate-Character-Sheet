@@ -65,7 +65,7 @@ public class FigmentsPanel {
           } else {
             setStyle("");
           }
-        }else {
+        } else {
           setStyle("");
         }
       }
@@ -110,7 +110,7 @@ public class FigmentsPanel {
     txtName.prefWidthProperty().bind(colName.widthProperty());
     txtName.minWidthProperty().bind(colName.minWidthProperty());
 
-    SpinnerAutoCommit<Integer> nsMv = new SpinnerAutoCommit<Integer>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 99));
+    SpinnerAutoCommit<Integer> nsMv = new SpinnerAutoCommit<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 99));
     nsMv.setEditable(true);
     //NumberSpinner nsMv = new NumberSpinner();
     //NumberTextField txtMv = nsMv.getNumberField();
@@ -118,7 +118,7 @@ public class FigmentsPanel {
     nsMv.prefWidthProperty().bind(colMv.widthProperty());
     nsMv.minWidthProperty().bind(colMv.minWidthProperty());
 
-    SpinnerAutoCommit<Integer> nsCost = new SpinnerAutoCommit<Integer>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 99));
+    SpinnerAutoCommit<Integer> nsCost = new SpinnerAutoCommit<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 99));
     nsCost.setEditable(true);
     //NumberSpinner nsCost = new NumberSpinner();
     //NumberTextField txtCost = nsCost.getNumberField();
@@ -241,7 +241,7 @@ public class FigmentsPanel {
       }
     }
 
-    SpinnerAutoCommit<Integer> txtBonus = new SpinnerAutoCommit<Integer>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100));
+    SpinnerAutoCommit<Integer> txtBonus = new SpinnerAutoCommit<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100));
     txtBonus.setEditable(true);
     txtBonus.prefWidthProperty().bind(colBonus.widthProperty());
     txtBonus.minWidthProperty().bind(colBonus.minWidthProperty());

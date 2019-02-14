@@ -18,7 +18,7 @@ public enum Attribute {
   private final String god;
   private final Color color;
   private final int index;
-  private boolean physical;
+  private final boolean physical;
 
   Attribute(String abbrevation, Color color,String god, String Aspect,  int index, boolean physical) {
     this.abbrevation = abbrevation;

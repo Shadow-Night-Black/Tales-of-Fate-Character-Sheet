@@ -80,10 +80,6 @@ public class MainFrame extends Application {
     this.stage.show();
   }
 
-  private Pane createFigmentPane() {
-    return null;
-  }
-
 
   public void update(ToFCharacter character) {
     this.character = character;

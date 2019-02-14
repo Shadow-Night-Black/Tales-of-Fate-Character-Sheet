@@ -4,7 +4,6 @@ import data.Attribute;
 import data.ToFCharacter;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
-import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -15,11 +14,11 @@ import java.util.TreeMap;
 
 public class AttributePanel {
 //  private final Map<Attribute, SpinnerAutoCommit<Integer>> experianceEditors;
-  private Map<Attribute, Label> baseValues;
-  private Map<Attribute, Label> attributeModifer;
-  private Map<Attribute, Label> modifiedValues;
+  private final Map<Attribute, Label> baseValues;
+  private final Map<Attribute, Label> attributeModifer;
+  private final Map<Attribute, Label> modifiedValues;
 //  private Map<Attribute, Label> modifiedMods;
-  private Map<Attribute, DicePoolUI> dicePools;
+  private final Map<Attribute, DicePoolUI> dicePools;
   private final DecimalFormat fmt;
   private final GridPane pane;
 

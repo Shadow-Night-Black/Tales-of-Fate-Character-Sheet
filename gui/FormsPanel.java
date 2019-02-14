@@ -1,19 +1,5 @@
 package gui;
 
-import data.*;
-import gui.models.FeatModel;
-import gui.models.FormModel;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-
-import java.math.BigDecimal;
 /*
 public class FormsPanel {
   private TableView<FormModel> formTable;

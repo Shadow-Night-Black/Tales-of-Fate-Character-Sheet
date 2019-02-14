@@ -15,6 +15,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
+import org.w3c.dom.Attr;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -23,7 +24,7 @@ public class BlessingsPanel {
 
 
   private final GridPane grid;
-  private Map<Attribute, SpinnerAutoCommit<Integer>> totemMods;
+  private final Map<Attribute, SpinnerAutoCommit<Integer>> totemMods;
   private final TableView<BlessingModel> tblBlessings;
 
   public BlessingsPanel(MainFrame mainFrame, ToFCharacter character) {
@@ -38,7 +39,7 @@ public class BlessingsPanel {
 
     Totem totem = character.getTotem();
     for (Attribute a : Attribute.values()) {
-      SpinnerAutoCommit<Integer> modifier = new SpinnerAutoCommit<Integer>(new SpinnerValueFactory.IntegerSpinnerValueFactory(-10, 10));
+      SpinnerAutoCommit<Integer> modifier = new SpinnerAutoCommit<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(-10, 10));
       modifier.setEditable(true);
       modifier.getValueFactory().setValue(totem.getAttributeBonus(a));
       modifier.getEditor().setPrefColumnCount(3);
@@ -109,7 +110,7 @@ public class BlessingsPanel {
     comboAddGod.minWidthProperty().bind(colGod.minWidthProperty());
     comboAddGod.setCellFactory(
       new Callback<ListView<Attribute>, ListCell<Attribute>>() {
-        public ListCell<Attribute > call(ListView<Attribute> p) {
+        public ListCell<Attribute> call(ListView<Attribute> p) {
           return new ListCell<Attribute>() {
             protected void updateItem(Attribute item, boolean empty) {
               super.updateItem(item, empty);
@@ -168,7 +169,7 @@ public class BlessingsPanel {
           txtAddCost.getValue(),
           txtAddDesc.getText()));
         mainFrame.update(character);
-      }catch (NumberFormatException e) {}
+      }catch (NumberFormatException ignored) {}
     });
 
     Button btnEditBless = new Button("Edit");

@@ -1,14 +1,9 @@
 package gui.models;
 
-import data.Feat;
 import data.Figment;
-import data.Skill;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ItemModel {
   private SimpleStringProperty name, desc;

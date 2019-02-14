@@ -3,21 +3,18 @@ package data;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Skill implements Comparable<Skill>{
   private SkillLevel level;
   private String name;
   private List<Attribute> attributes;
 
-  public Skill() {
-    this("Test", SkillLevel.AVERAGE);
-  }
 
-  public Skill(String name, SkillLevel level, Attribute... attributes) {
+  public Skill(String name, SkillLevel level, List<Attribute> attributes) {
     this.level = level;
     this.name = name;
-    this.attributes = new ArrayList<>();
-    Collections.addAll(this.attributes, attributes);
+    this.attributes = Objects.requireNonNullElse( attributes, new ArrayList<>());
   }
 
   public SkillLevel getLevel() {

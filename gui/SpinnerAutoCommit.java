@@ -43,9 +43,7 @@ public class SpinnerAutoCommit<T> extends Spinner<T> {
   }
 
   private void addListenerKeyChange() {
-    getEditor().textProperty().addListener((observable, oldValue, newValue) -> {
-      commitEditorText();
-    });
+    getEditor().textProperty().addListener((observable, oldValue, newValue) -> commitEditorText());
   }
 
   private void commitEditorText() {
