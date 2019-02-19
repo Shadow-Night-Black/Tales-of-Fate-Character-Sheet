@@ -56,7 +56,7 @@ public class FigmentsPanel {
     TableColumn<ItemModel, String> colDesc = new TableColumn<>("Description");
 
     inventory.getColumns().addAll(colName, colMv, colCost, colDesc);
-    inventory.setRowFactory(param -> new TableRow<ItemModel>() {
+    inventory.setRowFactory(param -> new TableRow<>() {
       public void updateItem(ItemModel model, boolean empty) {
         super.updateItem(model, empty);
         if (model != null && !empty) {
@@ -302,7 +302,7 @@ public class FigmentsPanel {
         if (advantageMode) {
           model.setBonus(comboAdvantages.getValue().toInt());
         }else {
-          model.setBonus(txtBonus.getValue().intValue());
+          model.setBonus(txtBonus.getValue());
         }
         mainFrame.update(character);
       }

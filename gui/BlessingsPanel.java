@@ -15,7 +15,6 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Callback;
-import org.w3c.dom.Attr;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -109,9 +108,9 @@ public class BlessingsPanel {
     comboAddGod.prefWidthProperty().bind(colGod.widthProperty());
     comboAddGod.minWidthProperty().bind(colGod.minWidthProperty());
     comboAddGod.setCellFactory(
-      new Callback<ListView<Attribute>, ListCell<Attribute>>() {
+      new Callback<>() {
         public ListCell<Attribute> call(ListView<Attribute> p) {
-          return new ListCell<Attribute>() {
+          return new ListCell<>() {
             protected void updateItem(Attribute item, boolean empty) {
               super.updateItem(item, empty);
               if (empty) {
@@ -125,7 +124,7 @@ public class BlessingsPanel {
       });
 
     comboAddGod.setButtonCell(
-      new ListCell<Attribute>() {
+      new ListCell<>() {
         protected void updateItem(Attribute t, boolean bln) {
           super.updateItem(t, bln);
           if (bln) {

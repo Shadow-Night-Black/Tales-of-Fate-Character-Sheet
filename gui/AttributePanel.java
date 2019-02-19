@@ -13,9 +13,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class AttributePanel {
-//  private final Map<Attribute, SpinnerAutoCommit<Integer>> experianceEditors;
+//  private final Map<Attribute, SpinnerAutoCommit<Integer>> experienceEditors;
   private final Map<Attribute, Label> baseValues;
-  private final Map<Attribute, Label> attributeModifer;
+  private final Map<Attribute, Label> attributeModifier;
   private final Map<Attribute, Label> modifiedValues;
 //  private Map<Attribute, Label> modifiedMods;
   private final Map<Attribute, DicePoolUI> dicePools;
@@ -24,10 +24,10 @@ public class AttributePanel {
 
   public AttributePanel(MainFrame mainFrame, ToFCharacter character){
     baseValues = new TreeMap<>();
-    attributeModifer = new TreeMap<>();
+    attributeModifier = new TreeMap<>();
     modifiedValues = new TreeMap<>();
 //    modifiedMods = new TreeMap<>();
-//    experianceEditors = new TreeMap<>();
+//    experienceEditors = new TreeMap<>();
     dicePools = new TreeMap<>();
     fmt = new DecimalFormat("+#0;-#");
 
@@ -50,7 +50,7 @@ public class AttributePanel {
 
       int modifier = character.getModifiedAttribute(attribute) - character.getBaseAttribute(attribute);
       Label lblBaseMod = new Label(fmt.format(modifier));
-      attributeModifer.put(attribute, lblBaseMod);
+      attributeModifier.put(attribute, lblBaseMod);
 
       int moddedValue = character.getModifiedAttribute(attribute);
       Label lblModValues = new Label(String.valueOf(moddedValue));
@@ -82,7 +82,7 @@ public class AttributePanel {
     for (Attribute attribute: Attribute.values()) {
       pane.addRow(attribute.index(), new Label(attribute.getAbbreviation()),
         baseValues.get(attribute),
-        attributeModifer.get(attribute),
+        attributeModifier.get(attribute),
         new Separator(),
         modifiedValues.get(attribute),
 //        modifiedMods.get(attribute));
@@ -91,8 +91,8 @@ public class AttributePanel {
 //        new Separator(),
 //        experianceEditors.get(attribute));
     }
-    ColumnConstraints attributeBoxs = new ColumnConstraints(60);
-    pane.getColumnConstraints().addAll(new ColumnConstraints(), attributeBoxs);
+    ColumnConstraints attributeBoxes = new ColumnConstraints(60);
+    pane.getColumnConstraints().addAll(new ColumnConstraints(), attributeBoxes);
 
   }
 
@@ -101,7 +101,7 @@ public class AttributePanel {
       int value = character.getBaseAttribute(attribute);
       int moddedValue = character.getModifiedAttribute(attribute);
       baseValues.get(attribute).setText(String.valueOf(value));
-      attributeModifer.get(attribute).setText(fmt.format(moddedValue - value));
+      attributeModifier.get(attribute).setText(fmt.format(moddedValue - value));
       modifiedValues.get(attribute).setText(String.valueOf(moddedValue));
       dicePools.get(attribute).update(character.getDicePool(attribute));
 //      modifiedMods.get(attribute).setText(fmt.format(Attribute.getModifier(moddedValue)));

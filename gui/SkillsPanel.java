@@ -10,21 +10,15 @@ import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class SkillsPanel {
 
@@ -273,7 +267,7 @@ public class SkillsPanel {
     btnAddSkill.setOnAction(actionEvent -> {
       List<Attribute> attributeList = listAttributes.getItems().stream()
         .filter(menuItem -> menuItem instanceof CustomMenuItem).map(menuItem -> (CustomMenuItem) menuItem)
-        .map(cMI -> cMI.getContent())
+        .map(CustomMenuItem::getContent)
         .filter(node -> node instanceof CheckBox).map(checkBox -> (CheckBox) checkBox)
         .filter(CheckBox::isSelected)
         .map(CheckBox::getText)
@@ -289,7 +283,7 @@ public class SkillsPanel {
       SkillModel model = skillTable.getSelectionModel().getSelectedItem();
       List<Attribute> attributeList = listAttributes.getItems().stream()
         .filter(menuItem -> menuItem instanceof CustomMenuItem).map(menuItem -> (CustomMenuItem) menuItem)
-        .map(cMI -> cMI.getContent())
+        .map(CustomMenuItem::getContent)
         .filter(node -> node instanceof CheckBox).map(checkBox -> (CheckBox) checkBox)
         .filter(CheckBox::isSelected)
         .map(CheckBox::getText)
@@ -320,7 +314,7 @@ public class SkillsPanel {
         comboLevel.getSelectionModel().select(SkillLevel.valueOf(skillModel.getLevel()));
         listAttributes.getItems().stream()
           .filter(menuItem -> menuItem instanceof CustomMenuItem).map(menuItem -> (CustomMenuItem) menuItem)
-          .map(cMI -> cMI.getContent())
+          .map(CustomMenuItem::getContent)
           .filter(node -> node instanceof CheckBox).map(checkBox -> (CheckBox) checkBox)
           .forEach(checkBox -> checkBox.setSelected(skillModel.getSkill().getAttributes().contains(Attribute.valueOf(checkBox.getText()))));
       }

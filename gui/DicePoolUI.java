@@ -48,7 +48,7 @@ public class DicePoolUI {
 
         panel.getChildren().addAll(dieSize, numberOfDie);
       if (die.pips() <= pool.getNumberOfPips()) {
-        //TODO, Hide unecessary Dice
+        //TODO, Hide unnecessary Dice
       }
     }
   }

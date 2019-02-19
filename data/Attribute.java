@@ -13,15 +13,15 @@ public enum Attribute {
   PRESENCE("Pres", Color.GOLD, "Belia",  "The Eclipse", 6, false);
 
 
-  private final String abbrevation;
+  private final String abbreviation;
 
   private final String god;
   private final Color color;
   private final int index;
   private final boolean physical;
 
-  Attribute(String abbrevation, Color color,String god, String Aspect,  int index, boolean physical) {
-    this.abbrevation = abbrevation;
+  Attribute(String abbreviation, Color color, String god, String Aspect, int index, boolean physical) {
+    this.abbreviation = abbreviation;
     this.color = color;
     this.god = god;
     this.index = index;
@@ -29,7 +29,7 @@ public enum Attribute {
   }
 
   public String getAbbreviation(){
-    return this.abbrevation;
+    return this.abbreviation;
   }
 
   public Color getColor(){

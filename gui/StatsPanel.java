@@ -19,15 +19,15 @@ public class StatsPanel {
   private Label lblCurrentBody;
   private Label lblBaseMind;
   private Label lblCurrentMind;
-  private Label lblBaseDC;
-  private Label lblCurrentDC;
-  private Label lblBaseMC;
-  private Label lblCurrentMC;
-  private Label lblBaseFate;
-  private Label lblCurrentFate;
-  private GridPane gridHealth;
-  private GridPane gridPoints;
-  private List<Pair<Label, Label>> listSegments;
+  private final Label lblBaseDC;
+  private final Label lblCurrentDC;
+  private final Label lblBaseMC;
+  private final Label lblCurrentMC;
+  private final Label lblBaseFate;
+  private final Label lblCurrentFate;
+  private final GridPane gridHealth;
+  private final GridPane gridPoints;
+  private final List<Pair<Label, Label>> listSegments;
   private ToFCharacter toFCharacter;
 //  private final Label lblBaseInit;
 //  private final Label lblCurrentInit;
@@ -80,7 +80,7 @@ public class StatsPanel {
     gridPoints.addColumn(4, lblFate, lblBaseFate, lblCurrentFate);
 
     Button btnHeal = new Button("Heal Damage");
-    Button btnDamge = new Button("Take Damage");
+    Button btnDamage = new Button("Take Damage");
     btnHeal.setOnAction(actionEvent ->  {
       Optional<Pair<Integer, Integer>> result = createDoublePrompt("Healing", "How much do you wish to heal?", "Body", "Mind", "Heal");
       if (result.isPresent()) {
@@ -91,7 +91,7 @@ public class StatsPanel {
 
       }
     });
-    btnDamge.setOnAction(actionEvent -> {
+    btnDamage.setOnAction(actionEvent -> {
       Optional<Pair<Integer, Integer>> result = createDoublePrompt("Damage", "How much damage did you take?", "Body", "Mind", "Take Damage");
       if (result.isPresent()) {
         Pair<Integer, Integer> values = result.get();
@@ -101,7 +101,7 @@ public class StatsPanel {
       }
     });
     gridPoints.add(btnHeal, 5, 1);
-    gridPoints.add(btnDamge, 5, 2);
+    gridPoints.add(btnDamage, 5, 2);
 
 //    Button btnInitSet = new Button("Set Initative");
 //    Button btnInitUse = new Button("Use Initative");
