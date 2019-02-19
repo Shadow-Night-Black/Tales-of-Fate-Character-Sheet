@@ -29,7 +29,7 @@ public class DicePool {
     dice = new TreeMap<>();
     for (Dice d: Dice.values()) {
       Integer numberOfDice = pool.get(d);
-      dice.put(d, Objects.requireNonNullElse(numberOfDice, (Integer) 0));
+      dice.put(d, Objects.requireNonNullElse(numberOfDice, 0));
     }
   }
 

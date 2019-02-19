@@ -7,8 +7,13 @@ import data.ToFCharacter;
 import gui.models.FeatModel;
 import gui.models.SkillModel;
 import javafx.geometry.Pos;
+import javafx.geometry.Side;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -19,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SkillsPanel {
 
@@ -227,11 +233,26 @@ public class SkillsPanel {
     txtName.prefWidthProperty().bind(colName.widthProperty());
     txtName.minWidthProperty().bind(colName.minWidthProperty());
 
-    MenuButton listAttributes = new MenuButton("Attributes");
+    ContextMenu listAttributes = new ContextMenu();
+
+    Button showAttributes = new Button("Attributes");
+    showAttributes.prefWidthProperty().bind(colAttribute.widthProperty());
+    showAttributes.minWidthProperty().bind(colAttribute.minWidthProperty());
+
+    showAttributes.setOnAction(actionEvent -> {
+      if (listAttributes.isShowing()){
+        listAttributes.hide();
+      }else  {
+        listAttributes.show(showAttributes, Side.BOTTOM, 0, 0);
+      }});
+
     listAttributes.prefWidthProperty().bind(colAttribute.widthProperty());
     listAttributes.minWidthProperty().bind(colAttribute.minWidthProperty());
 
-    Arrays.stream(Attribute.values()).map(Attribute::toString).map(CheckMenuItem::new).forEach(listAttributes.getItems()::add);
+    Arrays.stream(Attribute.values()).map(Attribute::toString).map(CheckBox::new).map(CustomMenuItem::new).forEach(listAttributes.getItems()::add);
+    listAttributes.getItems().stream()
+      .filter(menuItem -> menuItem instanceof CustomMenuItem).map(menuItem -> (CustomMenuItem) menuItem)
+      .forEach(customMenuItem -> customMenuItem.setHideOnClick(false));
 //    listAttributes.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
 
@@ -244,18 +265,20 @@ public class SkillsPanel {
     comboLevel.getSelectionModel().select(SkillLevel.PROFICENT);
 
 
-    inputFields.getChildren().addAll(txtName, comboLevel, listAttributes);
+    inputFields.getChildren().addAll(txtName, comboLevel, showAttributes);
 
     HBox controls = new HBox();
 
     Button btnAddSkill = new Button("Add");
     btnAddSkill.setOnAction(actionEvent -> {
-      List<Attribute> attributeList = new ArrayList<>();
-      for (MenuItem menuItem : listAttributes.getItems()) {
-        if (((CheckMenuItem)menuItem).isSelected()) {
-          attributeList.add(Attribute.valueOf(menuItem.getText()));
-        }
-      }
+      List<Attribute> attributeList = listAttributes.getItems().stream()
+        .filter(menuItem -> menuItem instanceof CustomMenuItem).map(menuItem -> (CustomMenuItem) menuItem)
+        .map(cMI -> cMI.getContent())
+        .filter(node -> node instanceof CheckBox).map(checkBox -> (CheckBox) checkBox)
+        .filter(CheckBox::isSelected)
+        .map(CheckBox::getText)
+        .map(Attribute::valueOf).collect(Collectors.toList());
+
       Skill skill = new Skill(txtName.getText(), comboLevel.getValue(), attributeList);
       character.addAbility(skill);
       mainFrame.update(character);
@@ -264,16 +287,17 @@ public class SkillsPanel {
     Button btnEditSkill= new Button("Edit");
     btnEditSkill.setOnAction(actionEvent -> {
       SkillModel model = skillTable.getSelectionModel().getSelectedItem();
-      List<Attribute> attributes = new ArrayList<>();
-      for (MenuItem menuItem : listAttributes.getItems()) {
-        if (((CheckMenuItem)menuItem).isSelected()) {
-          attributes.add(Attribute.valueOf(menuItem.getText()));
-        }
-      }
+      List<Attribute> attributeList = listAttributes.getItems().stream()
+        .filter(menuItem -> menuItem instanceof CustomMenuItem).map(menuItem -> (CustomMenuItem) menuItem)
+        .map(cMI -> cMI.getContent())
+        .filter(node -> node instanceof CheckBox).map(checkBox -> (CheckBox) checkBox)
+        .filter(CheckBox::isSelected)
+        .map(CheckBox::getText)
+        .map(Attribute::valueOf).collect(Collectors.toList());
       if (model != null) {
         model.setName(txtName.getText());
         model.setLevel(comboLevel.getValue().toString());
-        model.setAttribute(attributes);
+        model.setAttribute(attributeList);
         mainFrame.update(character);
       }
     });
@@ -294,7 +318,11 @@ public class SkillsPanel {
       if (skillModel != null) {
         txtName.setText(skillModel.getName());
         comboLevel.getSelectionModel().select(SkillLevel.valueOf(skillModel.getLevel()));
-        listAttributes.getItems().forEach(t -> ((CheckMenuItem )t).setSelected(skillModel.getSkill().getAttributes().contains(Attribute.valueOf(t.getText()))));
+        listAttributes.getItems().stream()
+          .filter(menuItem -> menuItem instanceof CustomMenuItem).map(menuItem -> (CustomMenuItem) menuItem)
+          .map(cMI -> cMI.getContent())
+          .filter(node -> node instanceof CheckBox).map(checkBox -> (CheckBox) checkBox)
+          .forEach(checkBox -> checkBox.setSelected(skillModel.getSkill().getAttributes().contains(Attribute.valueOf(checkBox.getText()))));
       }
     });
 
