@@ -10,7 +10,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 
 public class DicePoolEditor {
@@ -53,6 +55,10 @@ public class DicePoolEditor {
     }
   }
 
+  public DicePool getDicePool() {
+    return new DicePool(dice.entrySet().stream()
+      .collect(Collectors.toMap(Map.Entry::getKey, o -> o.getValue().getValue())));
+  }
 
   public void update(DicePool dicePool) {
 

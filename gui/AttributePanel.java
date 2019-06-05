@@ -13,11 +13,9 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class AttributePanel {
-//  private final Map<Attribute, SpinnerAutoCommit<Integer>> experienceEditors;
   private final Map<Attribute, Label> baseValues;
   private final Map<Attribute, Label> attributeModifier;
   private final Map<Attribute, Label> modifiedValues;
-//  private Map<Attribute, Label> modifiedMods;
   private final Map<Attribute, DicePoolDisplay> dicePools;
   private final DecimalFormat fmt;
   private final GridPane pane;
@@ -26,24 +24,10 @@ public class AttributePanel {
     baseValues = new TreeMap<>();
     attributeModifier = new TreeMap<>();
     modifiedValues = new TreeMap<>();
-//    modifiedMods = new TreeMap<>();
-//    experienceEditors = new TreeMap<>();
     dicePools = new TreeMap<>();
     fmt = new DecimalFormat("+#0;-#");
 
     for(Attribute attribute: Attribute.values()) {
-//      SpinnerAutoCommit<Integer> txtAttribute = new SpinnerAutoCommit<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 20));
-//      txtAttribute.setEditable(true);
-//      txtAttribute.getEditor().setPrefColumnCount(4);
-//      int baseValue = character.getBaseAttribute(attribute);
-//      txtAttribute.getValueFactory().setValue(baseValue);
-
-//      txtAttribute.valueProperty().addListener((observable, oldValue, newValue) -> {
-//        character.setAttribute(attribute, newValue);
-//        mainFrame.update(character);
-//      });
-
-
       int baseValue = character.getBaseAttribute(attribute);
       Label lblAttribute = new Label(String.valueOf(baseValue));
       baseValues.put(attribute, lblAttribute);
@@ -56,40 +40,21 @@ public class AttributePanel {
       Label lblModValues = new Label(String.valueOf(moddedValue));
       modifiedValues.put(attribute, lblModValues);
 
-//      int moddedMod = Attribute.getModifier(moddedValue);
-//      Label lblModMod = new Label(fmt.format(moddedMod));
-//      modifiedMods.put(attribute, lblModMod);
-
-
       DicePoolDisplay dicePool = new DicePoolDisplay(character.getDicePool(attribute));
       dicePools.put(attribute, dicePool);
-
-//      SpinnerAutoCommit<Integer> txtExperiance = new SpinnerAutoCommit<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 999));
-//      experianceEditors.put(attribute, txtExperiance);
-//      txtExperiance.setEditable(true);
-//      txtExperiance.getEditor().setPrefColumnCount(6);
-//      txtExperiance.getValueFactory().setValue(character.getExperiance(attribute));
-//      txtExperiance.valueProperty().addListener((observable, oldValue, newValue) -> {
-//        character.setExperiance(attribute, newValue);
-//        mainFrame.update(character);
-//      });
     }
 
     pane = MainFrame.getGridPane();
     pane.add(new Label("Base Attributes"), 0, 0, 3, 1);
     pane.add(new Label("Current Attributes"), 3, 0, 3, 1);
-//    pane.add(new Label("Experiance"), 7, 0, 3, 1);
     for (Attribute attribute: Attribute.values()) {
       pane.addRow(attribute.index(), new Label(attribute.getAbbreviation()),
         baseValues.get(attribute),
         attributeModifier.get(attribute),
         new Separator(),
         modifiedValues.get(attribute),
-//        modifiedMods.get(attribute));
         new Separator(),
         dicePools.get(attribute).getFrame());
-//        new Separator(),
-//        experianceEditors.get(attribute));
     }
     ColumnConstraints attributeBoxes = new ColumnConstraints(60);
     pane.getColumnConstraints().addAll(new ColumnConstraints(), attributeBoxes);
@@ -104,8 +69,6 @@ public class AttributePanel {
       attributeModifier.get(attribute).setText(fmt.format(moddedValue - value));
       modifiedValues.get(attribute).setText(String.valueOf(moddedValue));
       dicePools.get(attribute).update(character.getDicePool(attribute));
-//      modifiedMods.get(attribute).setText(fmt.format(Attribute.getModifier(moddedValue)));
-//      experianceEditors.get(attribute).getValueFactory().setValue(character.getExperiance(attribute));
     }
   }
 

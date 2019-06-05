@@ -15,10 +15,6 @@ import java.util.Optional;
 
 public class StatsPanel {
 
-  private Label lblBaseBody;
-  private Label lblCurrentBody;
-  private Label lblBaseMind;
-  private Label lblCurrentMind;
   private final Label lblBaseDC;
   private final Label lblCurrentDC;
   private final Label lblBaseMC;
@@ -29,8 +25,6 @@ public class StatsPanel {
   private final GridPane gridPoints;
   private final List<Pair<Label, Label>> listSegments;
   private ToFCharacter toFCharacter;
-//  private final Label lblBaseInit;
-//  private final Label lblCurrentInit;
 
   public StatsPanel(MainFrame mainFrame, ToFCharacter character) {
     this.toFCharacter = character;
@@ -69,11 +63,6 @@ public class StatsPanel {
     lblCurrentMC = new Label(String.valueOf(character.getCurrentMC()));
     gridPoints.addColumn(2, lblMC, lblBaseMC, lblCurrentMC);
 
-//    Label lblInit = new Label("Initative");
-//    lblBaseInit = new Label(String.valueOf(character.getBaseInit()));
-//    lblCurrentInit = new Label(String.valueOf(character.getCurrentInit()));
-//    gridPoints.addColumn(3, lblInit, lblBaseInit, lblCurrentInit);
-
     Label lblFate = new Label("Fate");
     lblBaseFate = new Label(String.valueOf(character.getBaseFate()));
     lblCurrentFate = new Label(String.valueOf(character.getCurrentFate()));
@@ -103,36 +92,6 @@ public class StatsPanel {
     gridPoints.add(btnHeal, 5, 1);
     gridPoints.add(btnDamage, 5, 2);
 
-//    Button btnInitSet = new Button("Set Initative");
-//    Button btnInitUse = new Button("Use Initative");
-//    btnInitSet.setOnAction(event -> {
-//      Optional<Integer> result = createSinglePrompt("Set Initative", "What is your new Initiative?", "");
-//      if (result.isPresent()) {
-//        toFCharacter.setBaseInit(result.get());
-//        mainFrame.update(toFCharacter);
-//      }
-//    });
-
-//    btnInitUse.setOnAction(event -> {
-//     Optional<Integer> result = createSinglePrompt("Use Initative", "How much Initative do you wish to use?", "");
-//      if (result.isPresent()) {
-//        Integer value = result.get();
-//        if (value > toFCharacter.getCurrentInit()) {
-//          Alert alert = new Alert(Alert.AlertType.ERROR);
-//          alert.setTitle("Too little Initative!");
-//          alert.setContentText("You have too little Initative to use that much!");
-//          alert.showAndWait();
-//        }else {
-//          toFCharacter.setCurrentInit(toFCharacter.getCurrentInit() - result.get());
-//          mainFrame.update(toFCharacter);
-//        }
-//      }
-//    });
-
-//    gridPoints.add(btnInitSet, 6, 1);
-//    gridPoints.add(btnInitUse, 6, 2);
-
-
     Button btnFateGain = new Button("Recover Fate");
     Button btnFateUse = new Button("Use Fate");
     btnFateGain.setOnAction(event -> {
@@ -161,25 +120,22 @@ public class StatsPanel {
     gridPoints.add(btnFateGain, 7, 1);
     gridPoints.add(btnFateUse, 7,2);
 
-//    Button btnMaxFateRecovery = new Button("Regain Max Fate");
-//    Button btnMaxFateDamage = new Button("Lose Max Fate");
-//    btnMaxFateRecovery.setOnAction(event -> {
-//      Optional<Integer> result = createSinglePrompt("Recover Max Fate", "How much Max Fate do you regain?", "");
-//      if (result.isPresent()) {
-//        int amount = result.get();
-//        toFCharacter.setCurrentFate(toFCharacter.getCurrentFate() + amount);
-//        toFCharacter.setFateDamage(toFCharacter.getFateDamage() - amount);
-//        mainFrame.update(toFCharacter);
-//      }
-//    });
-//    btnMaxFateDamage.setOnAction(event -> {
-//      toFCharacter.setCurrentFate(toFCharacter.getCurrentFate() - 1);
-//      toFCharacter.setFateDamage(toFCharacter.getFateDamage()+1);
-//      mainFrame.update(toFCharacter);
-//    });
-//    gridPoints.add(btnMaxFateRecovery, 8, 1);
-//    gridPoints.add(btnMaxFateDamage, 8,2);
 
+    Button btnTalliesGain = new Button("Gain Tallies");
+    Button btnSpendTallies = new Button("Spend Character Points");
+
+    btnTalliesGain.setOnAction(actionEvent -> {
+      Optional<Integer> result = createSinglePrompt("Gain Tallies", "How many Tallies did you gain?", "");
+      if (result.isPresent()) {
+        toFCharacter.setExperiance(toFCharacter.getExperiance() + result.get());
+        mainFrame.update(toFCharacter);
+      }
+    });
+
+    btnSpendTallies.setOnAction(actionEvent ->  new AttributeEditor(mainFrame, toFCharacter).show());
+
+    gridPoints.add(btnTalliesGain, 10, 1);
+    gridPoints.add(btnSpendTallies, 10, 2);
 
   }
 
@@ -197,7 +153,6 @@ public class StatsPanel {
           field.positionCaret(field.getLength());
         });}});
 
-// Traditional way to get the response value.
     Optional<String> result = dialog.showAndWait();
     return result.map(Integer::parseInt);
   }
@@ -240,12 +195,10 @@ public class StatsPanel {
         });}});
 
     prompt.getDialogPane().setContent(grid);
-    // Request focus on the username field by default.
     Platform.runLater(txtHealingBody::requestFocus);
 
 
 
-// Convert the result to a username-password-pair when the login button is clicked.
     prompt.setResultConverter(dialogButton -> {
       if (dialogButton == btnConfirm) {
         int healedBody, healedMind;
@@ -289,9 +242,6 @@ public class StatsPanel {
 
     lblBaseMC.setText(String.valueOf(character.getBaseMC()));
     lblCurrentMC.setText(String.valueOf(character.getCurrentMC()));
-
-//    lblBaseInit.setText(String.valueOf(character.getBaseInit()));
-//    lblCurrentInit.setText(String.valueOf(character.getCurrentInit()));
 
     lblBaseFate.setText(String.valueOf(character.getBaseFate()));
     lblCurrentFate.setText(String.valueOf(character.getCurrentFate()));

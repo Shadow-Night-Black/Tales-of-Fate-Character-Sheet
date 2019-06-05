@@ -178,4 +178,8 @@ public class MainFrame extends Application {
     grid.setPadding(new Insets(25, 25, 25, 25));
     return grid;
   }
+
+  public Stage getStage() {
+    return stage;
+  }
 }
