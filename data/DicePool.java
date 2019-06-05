@@ -2,9 +2,11 @@ package data;
 
 
 import javax.xml.bind.annotation.XmlElement;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 
 public class DicePool {
@@ -51,5 +53,13 @@ public class DicePool {
 
   public void setNumberOfDice(Dice die, int number) {
     dice.put(die, number);
+  }
+
+  public String toString() {
+    return Arrays.stream(Dice.values())
+      .filter(d -> dice.get(d) > 0)
+      .map(d -> d.getIdentifier() + ": " + dice.get(d))
+      .collect(Collectors.joining(","));
+
   }
 }

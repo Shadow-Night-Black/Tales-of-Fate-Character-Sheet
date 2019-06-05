@@ -13,18 +13,18 @@ import java.util.Map;
 import java.util.TreeMap;
 
 
-public class DicePoolUI {
+public class DicePoolEditor {
 
 
   private final Pane panel;
   private final Map<Dice, Spinner<Integer>> dice;
 
 
-  DicePoolUI() {
+  DicePoolEditor() {
     this(new DicePool());
   }
 
-  DicePoolUI(DicePool pool) {
+  DicePoolEditor(DicePool pool) {
 
     panel = new HBox(2);
 

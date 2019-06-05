@@ -18,7 +18,7 @@ public class AttributePanel {
   private final Map<Attribute, Label> attributeModifier;
   private final Map<Attribute, Label> modifiedValues;
 //  private Map<Attribute, Label> modifiedMods;
-  private final Map<Attribute, DicePoolUI> dicePools;
+  private final Map<Attribute, DicePoolDisplay> dicePools;
   private final DecimalFormat fmt;
   private final GridPane pane;
 
@@ -61,7 +61,7 @@ public class AttributePanel {
 //      modifiedMods.put(attribute, lblModMod);
 
 
-      DicePoolUI dicePool = new DicePoolUI(character.getDicePool(attribute));
+      DicePoolDisplay dicePool = new DicePoolDisplay(character.getDicePool(attribute));
       dicePools.put(attribute, dicePool);
 
 //      SpinnerAutoCommit<Integer> txtExperiance = new SpinnerAutoCommit<>(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 999));
