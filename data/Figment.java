@@ -83,9 +83,8 @@ public class Figment extends Memory implements Comparable<Figment>{
   public int compareTo(Figment o) {
     int result = this.getName().compareTo(o.getName());
     if (result == 0) {
-      result = this.getDesc().compareTo(o.getDesc());
+      return this.getDesc().compareTo(o.getDesc());
     }
-
     return result;
   }
 }

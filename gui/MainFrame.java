@@ -2,19 +2,25 @@ package gui;
 
 import data.ToFCharacter;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 
 public class MainFrame extends Application {
@@ -43,6 +49,21 @@ public class MainFrame extends Application {
   }
 
   public void start(Stage primaryStage) {
+    URL fxml = this.getClass().getResource("FXML/CharacterSheet.fxml");
+    try {
+      FXMLLoader fxmlLoader = new FXMLLoader(fxml);
+      Parent root = fxmlLoader.load();
+      CharacterSheet characterSheet =  fxmlLoader.getController();
+      characterSheet.update(new ToFCharacter());
+
+      Scene scene = new Scene(root);
+      primaryStage.setScene(scene);
+
+      primaryStage.show();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    /*
     this.stage = primaryStage;
     primaryStage.setTitle(character.getName() + " - ToFCharacter Sheet");
 
@@ -77,6 +98,7 @@ public class MainFrame extends Application {
     statsPanel = new StatsPanel(this, character);
     root.getChildren().addAll(mainView, statsPanel.getPanel());
     this.stage.show();
+    */
   }
 
 
